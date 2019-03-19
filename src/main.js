@@ -14,11 +14,24 @@
  * limitations under the License.
  */
 
-import '@/assets/css/base.scss';
-import moment from 'moment';
 import Vue from 'vue';
+import App from './App'
+import router from './router'
 import VueRouter from 'vue-router';
-import components from './components';
+
+Vue.config.productionTip = false
+
+Vue.use(router);
+
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  router,
+  components: { App },
+  template: '<App/>'
+})
+
+/*import components from './components';
 import Notifications from './notifications';
 import sbaShell from './shell';
 import Store from './store';
@@ -110,3 +123,4 @@ new Vue({
     applicationStore.removeEventListener('error', this.onError)
   }
 });
+*/
