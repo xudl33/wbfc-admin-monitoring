@@ -6,7 +6,6 @@ Vue.use(Router)
 export default new Router({
   routes:[
   	{path: '/', name: 'index', component: ()=>import('../views/wbfc-admin-monitoring')},
-  	{path: '/test', name: 'test', component: ()=>import('../views/wbfc-admin-monitoring')},
   ],
   mode: 'history',
 })

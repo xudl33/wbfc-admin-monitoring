@@ -20,6 +20,7 @@ import {concat, from, ignoreElements, Observable} from '@/utils/rxjs';
 import uri from '@/utils/uri';
 import sortBy from 'lodash/sortBy';
 import Instance from './instance';
+import ApplicationContext from './applicationContext';
 
 class Application {
   constructor({name, instances, ...application}) {
@@ -60,10 +61,13 @@ class Application {
     });
   }*/
 
-  static list() {
-    return Application._transformResponse('[{"name":"boot2-security","buildVersion":null,"status":"UP","statusTimestamp":"2019-03-14T06:48:07.108Z","instances":[{"id":"20d1dc816161","version":3,"registration":{"name":"boot2-security","managementUrl":"http://localhost:5200/actuator","healthUrl":"http://localhost:5200/actuator/health","serviceUrl":"http://localhost:5200/","source":"discovery","metadata":{"management.context-path":"/actuator"}},"registered":true,"statusInfo":{"status":"UP","details":{"diskSpace":{"status":"UP","details":{"total":333447163904,"free":164081586176,"threshold":10485760}},"db":{"status":"UP","details":{"database":"MySQL","hello":1}}}},"statusTimestamp":"2019-03-14T06:48:07.108Z","info":{},"endpoints":[{"id":"sessions","url":"http://localhost:5200/actuator/sessions"},{"id":"httptrace","url":"http://localhost:5200/actuator/httptrace"},{"id":"caches","url":"http://localhost:5200/actuator/caches"},{"id":"loggers","url":"http://localhost:5200/actuator/loggers"},{"id":"health","url":"http://localhost:5200/actuator/health"},{"id":"env","url":"http://localhost:5200/actuator/env"},{"id":"heapdump","url":"http://localhost:5200/actuator/heapdump"},{"id":"features","url":"http://localhost:5200/actuator/features"},{"id":"scheduledtasks","url":"http://localhost:5200/actuator/scheduledtasks"},{"id":"mappings","url":"http://localhost:5200/actuator/mappings"},{"id":"beans","url":"http://localhost:5200/actuator/beans"},{"id":"configprops","url":"http://localhost:5200/actuator/configprops"},{"id":"threaddump","url":"http://localhost:5200/actuator/threaddump"},{"id":"metrics","url":"http://localhost:5200/actuator/metrics"},{"id":"conditions","url":"http://localhost:5200/actuator/conditions"},{"id":"auditevents","url":"http://localhost:5200/actuator/auditevents"},{"id":"info","url":"http://localhost:5200/actuator/info"},{"id":"jolokia","url":"http://localhost:5200/actuator/jolokia"}],"buildVersion":null,"tags":{}}]}]');
-  }
+/*  static list() {
+    return Application._transformResponse('[{"name":"boot2-security","buildVersion":null,"status":"UP","statusTimestamp":"2019-03-14T06:48:07.108Z","instances":[{"id":"20d1dc816161","registration":{"name":"boot2-security","managementUrl":"http://localhost:5200/actuator","healthUrl":"http://localhost:5200/actuator/health","serviceUrl":"http://localhost:5200/","source":"discovery","metadata":{"management.context-path":"/actuator"}},"registered":true,"statusInfo":{"status":"UP","details":{"diskSpace":{"status":"UP","details":{"total":333447163904,"free":164081586176,"threshold":10485760}},"db":{"status":"UP","details":{"database":"MySQL","hello":1}}}},"statusTimestamp":"2019-03-14T06:48:07.108Z","info":{},"endpoints":[{"id":"sessions","url":"http://localhost:5200/actuator/sessions"},{"id":"httptrace","url":"http://localhost:5200/actuator/httptrace"},{"id":"caches","url":"http://localhost:5200/actuator/caches"},{"id":"loggers","url":"http://localhost:5200/actuator/loggers"},{"id":"health","url":"http://localhost:5200/actuator/health"},{"id":"env","url":"http://localhost:5200/actuator/env"},{"id":"heapdump","url":"http://localhost:5200/actuator/heapdump"},{"id":"features","url":"http://localhost:5200/actuator/features"},{"id":"scheduledtasks","url":"http://localhost:5200/actuator/scheduledtasks"},{"id":"mappings","url":"http://localhost:5200/actuator/mappings"},{"id":"beans","url":"http://localhost:5200/actuator/beans"},{"id":"configprops","url":"http://localhost:5200/actuator/configprops"},{"id":"threaddump","url":"http://localhost:5200/actuator/threaddump"},{"id":"metrics","url":"http://localhost:5200/actuator/metrics"},{"id":"conditions","url":"http://localhost:5200/actuator/conditions"},{"id":"auditevents","url":"http://localhost:5200/actuator/auditevents"},{"id":"info","url":"http://localhost:5200/actuator/info"},{"id":"jolokia","url":"http://localhost:5200/actuator/jolokia"}],"buildVersion":null,"tags":{}}]}]');
+  }*/
 
+  static async list() {
+    return await ApplicationContext.getApplicationActuatorList(Application._transformResponse);
+  }
   static getStream() {
     return concat(
       from(waitForPolyfill()).pipe(ignoreElements())/*,

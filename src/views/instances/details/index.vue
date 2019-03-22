@@ -59,7 +59,7 @@
     <div class="columns is-desktop">
       <div class="column is-half-desktop">
         <details-process v-if="hasProcess" :instance="instance" />
-        <details-gc v-if="hasGc" :instance="instance" />
+        <details-gc v-if="hasGc" :instance="instance" desc="(垃圾回收)"/>
       </div>
       <div class="column is-half-desktop">
         <details-threads v-if="hasThreads" :instance="instance" />
@@ -67,10 +67,10 @@
     </div>
     <div class="columns is-desktop">
       <div class="column is-half-desktop">
-        <details-memory v-if="hasMemory" :instance="instance" type="heap" />
+        <details-memory v-if="hasMemory" :instance="instance" type="heap" desc="(堆内存)"/>
       </div>
       <div class="column is-half-desktop">
-        <details-memory v-if="hasMemory" :instance="instance" type="nonheap" />
+        <details-memory v-if="hasMemory" :instance="instance" type="nonheap" desc="(栈内存)"/>
       </div>
     </div>
     <div class="columns is-desktop">

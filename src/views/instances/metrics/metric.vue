@@ -31,6 +31,9 @@
               <option :value="undefined">
                 -
               </option>
+              <option value="percent">
+                Percent
+              </option>
               <option value="integer">
                 Integer
               </option>
@@ -143,6 +146,8 @@
         }
         const type = this.statisticTypes[statistic];
         switch (type) {
+          case 'percent':
+            return (measurement.value * 100).toFixed(4) + '%';
           case 'integer':
             return measurement.value.toFixed(0);
           case 'float':

@@ -52,6 +52,7 @@
     },
     computed: {
       icon() {
+        //console.log('icon = %o', this.status)
         return icons[this.status];
       }
     }

@@ -15,9 +15,6 @@
  */
 
 import axios from 'axios';
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-Vue.use(ElementUI);
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 if (global.SBA && global.SBA.csrf && global.SBA.csrf.headerName) {
@@ -38,9 +35,7 @@ instance.interceptors.request.use(config => {
 	if(config.url.indexOf('/i/') >= 0 ||  config.url.indexOf('/w/') >= 0){
 		//添加公用 Authorization
 		if(!window.sessionStorage){
-			this.$alert('您的浏览器版本太低，请使用最新版的Chrome', '提示', {
-	            confirmButtonText: '确定'
-	        });
+			alert('您的浏览器版本太低，请使用最新版的Chrome');
 	        return;
 		}
 		var userAuth = JSON.parse(window.sessionStorage.getItem("user-auth") || {});

@@ -16,6 +16,7 @@
 
 <template>
   <section class="section">
+    <application-add/>
     <div class="container">
       <p v-if="!applicationsInitialized" class="is-muted is-loading">
         Loading applications...
@@ -30,9 +31,7 @@
         </div>
       </div>
       <template v-if="applicationsInitialized">
-        <application-add/>
         <applications-stats :applications="applications" />
-
         <div class="field">
           <p class="control is-expanded has-icons-left">
             <input
@@ -154,7 +153,7 @@
       }
     },
     mounted() {
-      //console.log('mounted applicationsInitialized = %s', this.applicationsInitialized)
+      //console.log('applications = %o', this.applications)
       this.hasNotificationFiltersSupport = NotificationFilter.isSupported();
     },
     methods: {

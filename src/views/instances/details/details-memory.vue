@@ -15,7 +15,7 @@
   -->
 
 <template>
-  <sba-panel :title="`Memory: ${name}`" v-if="hasLoaded">
+  <sba-panel :title="`Memory: ${name}  ${desc}`" v-if="hasLoaded">
     <div>
       <div v-if="error" class="message is-danger">
         <div class="message-body">
@@ -82,6 +82,11 @@
       type: {
         type: String,
         required: true
+      },
+      desc: {
+        type: String,
+        default: '',
+        required: false
       }
     },
     mixins: [subscribing],

@@ -85,9 +85,18 @@ export default class {
   }*/
 
   start() {
+      Application.list().then(r => {
+        //console.log('app list = %o', r);
+        this.updateApplications(r);
+        this._dispatchEvent('connected')
+      })
+      
+  }
+
+  /*start() {
       this.updateApplications(Application.list())
       this._dispatchEvent('connected')
-  }
+  }*/
 
   updateApplications(applications) {
     applications.forEach(a => this.updateApplication(a));
