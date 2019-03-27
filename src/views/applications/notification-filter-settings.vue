@@ -58,7 +58,7 @@
   </div>
 </template>
 <script>
-  import NotificationFilter from '@/services/notification-filter';
+  import NotificationFilter from '../../services/notification-filter';
 
   export default {
     props: {

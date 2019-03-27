@@ -89,7 +89,7 @@
 </script>
 
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../../assets/css/utilities";
 
   td.health-details__nested {
     padding: 0 0 0 0.75em;

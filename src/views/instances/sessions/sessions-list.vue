@@ -98,8 +98,8 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
-  import {concatMap, from, listen, map, of, tap} from '@/utils/rxjs';
+  import Instance from '../../../services/instance';
+  import {concatMap, from, listen, map, of, tap} from '../../../utils/rxjs';
   import prettyBytes from 'pretty-bytes';
 
   export default {

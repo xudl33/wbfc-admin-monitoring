@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
+  import Instance from '../../../services/instance';
   import globalFilters from './global-filters';
   import routes from './routes';
 

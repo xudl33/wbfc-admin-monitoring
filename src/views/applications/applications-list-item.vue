@@ -49,7 +49,7 @@
   </div>
 </template>
 <script>
-  import Application from '@/services/application';
+  import Application from '../../services/application';
   import ApplicationSummary from './application-summary'
   import InstancesList from './instances-list'
 
@@ -104,7 +104,7 @@
   }
 </script>
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../assets/css/utilities";
 
   .application-list-item {
     transition: all $easing $speed;

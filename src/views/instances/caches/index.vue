@@ -61,8 +61,8 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
-  import CachesList from '@/views/instances/caches/caches-list';
+  import Instance from '../../../services/instance';
+  import CachesList from './caches-list';
   import flatMap from 'lodash/flatMap';
   import isEmpty from 'lodash/isEmpty';
 

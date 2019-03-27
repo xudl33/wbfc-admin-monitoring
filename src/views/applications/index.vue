@@ -82,11 +82,11 @@
 </template>
 
 <script>
-  import Popper from '@/directives/popper';
-  import subscribing from '@/mixins/subscribing';
-  import NotificationFilter from '@/services/notification-filter';
-  import {anyValueMatches} from '@/utils/collections';
-  import {concatMap, merge, Subject, timer} from '@/utils/rxjs';
+  import Popper from '../../directives/popper';
+  import subscribing from '../../mixins/subscribing';
+  import NotificationFilter from '../../services/notification-filter';
+  import {anyValueMatches} from '../../utils/collections';
+  import {concatMap, merge, Subject, timer} from '../../utils/rxjs';
   import groupBy from 'lodash/groupBy';
   import sortBy from 'lodash/sortBy';
   import transform from 'lodash/transform';
@@ -237,6 +237,7 @@
     },
     computed: {
       statusGroups() {
+        //console.log("group this.applications = %o", this.applications);
         const filteredApplications = this.filterInstances(this.applications);
         const applicationsByStatus = groupBy(filteredApplications, application => application.status);
         const list = transform(applicationsByStatus, (result, applications, status) => {

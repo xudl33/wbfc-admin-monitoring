@@ -65,7 +65,7 @@
   }
 </script>
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../assets/css/utilities";
 
   .instances-list td {
     vertical-align: middle;

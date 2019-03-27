@@ -30,7 +30,7 @@
 </script>
 
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../../assets/css/utilities";
 
   .thread-tag {
     width: 2em;

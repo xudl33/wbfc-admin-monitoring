@@ -1,4 +1,4 @@
-import axios from '@/utils/axios';
+import axios from '../utils/axios';
 var myAxios = axios.create();
 export default {
 	name: 'Application-Context',
@@ -45,6 +45,30 @@ export default {
 			this.setContext(context);
 		}
 	},
+	existsApplications(applications){
+		if(this.checkStore() && Array.isArray(applications) && applications.length > 0){
+			var context = this.getContext();
+			var localApps = context.applications || [];
+			var extRes = [];
+			for(var j in applications){
+				var checkApp = applications[j];
+				for(var i in localApps){
+					var localApp = localApps[i];
+					// id和名称相同就说明存在
+					if((checkApp.id && checkApp.id === localApp.id) || (checkApp.name && checkApp.name === localApp.name)){
+						var extApp = Object.assign({}, checkApp);
+						if(checkApp.id){
+							extApp.name = extApp.name + '(' + checkApp.id + ')';
+						}
+						
+						extRes.push(extApp);
+					}
+				}
+			}
+			return extRes;
+		}
+		return [];
+	},
 	importApplications(applications){
 		if(this.checkStore() && Array.isArray(applications) && applications.length > 0){
 			var context = this.getContext();
@@ -56,8 +80,8 @@ export default {
 					for(var i in context.applications){
 					var overwrite = false;
 					var localApp = context.applications[i];
-						// url相同就覆盖
-						if(localApp.id === applications[j].id || localApp.name === applications[j].name){
+						// id和名称相同就覆盖
+						if((applications[j].id && localApp.id === applications[j].id) || ( applications[j].name && localApp.name === applications[j].name)){
 							overwrite = true;
 							context.applications.splice(i, 1, applications[j]);
 							break;
@@ -211,6 +235,14 @@ export default {
 	getApplicationActuatorList(callback){
 		if(this.checkStore()) {
 			return getHealthList.call(this, callback);
+		}
+	},
+	setContainerVue(vueElement){
+		this.containVue = vueElement;
+	},
+	getApplications(){
+		if(this.containVue){
+			this.containVue.getApplications();
 		}
 	}
 }

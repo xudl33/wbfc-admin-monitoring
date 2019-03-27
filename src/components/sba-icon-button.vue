@@ -44,7 +44,7 @@
 </script>
 
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../assets/css/utilities";
 
   .icon-button {
     background: none;

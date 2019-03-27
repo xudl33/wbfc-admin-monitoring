@@ -82,8 +82,8 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
-  import {from} from '@/utils/rxjs';
+  import Instance from '../../../services/instance';
+  import {from} from '../../../utils/rxjs';
 
   export default {
     props: {

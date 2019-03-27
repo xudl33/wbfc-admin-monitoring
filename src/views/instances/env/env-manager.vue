@@ -115,8 +115,8 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
-  import {concatMap, filter, from, listen} from '@/utils/rxjs';
+  import Instance from '../../../services/instance';
+  import {concatMap, filter, from, listen} from '../../../utils/rxjs';
   import debounce from 'lodash/debounce';
   import uniq from 'lodash/uniq';
 

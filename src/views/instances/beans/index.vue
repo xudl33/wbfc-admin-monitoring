@@ -53,10 +53,10 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
-  import {compareBy} from '@/utils/collections';
-  import shortenClassname from '@/utils/shortenClassname';
-  import BeansList from '@/views/instances/beans/beans-list';
+  import Instance from '../../../services/instance';
+  import {compareBy} from '../../../utils/collections';
+  import shortenClassname from '../../../utils/shortenClassname';
+  import BeansList from './beans-list';
   import isEmpty from 'lodash/isEmpty';
 
   class Bean {

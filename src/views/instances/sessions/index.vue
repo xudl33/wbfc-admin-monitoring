@@ -51,7 +51,7 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
+  import Instance from '../../../services/instance';
   import debounce from 'lodash/debounce';
   import isEqual from 'lodash/isEqual';
   import moment from 'moment'

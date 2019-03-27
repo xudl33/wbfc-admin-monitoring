@@ -32,9 +32,9 @@
 </template>
 
 <script>
-  import subscribing from '@/mixins/subscribing';
-  import Instance from '@/services/instance';
-  import {concatMap, timer} from '@/utils/rxjs';
+  import subscribing from '../../../mixins/subscribing';
+  import Instance from '../../../services/instance';
+  import {concatMap, timer} from '../../../utils/rxjs';
   import remove from 'lodash/remove';
   import moment from 'moment-shortformat';
   import threadsList from './threads-list';

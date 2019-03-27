@@ -58,7 +58,7 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
+  import Instance from '../../../services/instance';
   import isEmpty from 'lodash/isEmpty';
   import mapKeys from 'lodash/mapKeys';
   import pickBy from 'lodash/pickBy';

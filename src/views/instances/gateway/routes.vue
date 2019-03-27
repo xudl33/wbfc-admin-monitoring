@@ -51,8 +51,8 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
-  import {anyValueMatches, compareBy} from '@/utils/collections';
+  import Instance from '../../../services/instance';
+  import {anyValueMatches, compareBy} from '../../../utils/collections';
   import addRoute from './add-route';
   import refreshRouteCache from './refresh-route-cache';
   import routesList from './routes-list';

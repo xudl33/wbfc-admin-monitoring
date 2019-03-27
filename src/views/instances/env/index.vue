@@ -74,7 +74,7 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
+  import Instance from '../../../services/instance';
   import pickBy from 'lodash/pickBy';
   import sbaEnvManager from './env-manager';
 

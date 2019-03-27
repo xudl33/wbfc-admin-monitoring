@@ -44,10 +44,10 @@
 </template>
 
 <script>
-  import subscribing from '@/mixins/subscribing';
-  import Instance from '@/services/instance';
-  import autolink from '@/utils/autolink';
-  import {animationFrameScheduler, concatAll, concatMap, map, of, tap} from '@/utils/rxjs';
+  import subscribing from '../../../mixins/subscribing';
+  import Instance from '../../../services/instance';
+  import autolink from '../../../utils/autolink';
+  import {animationFrameScheduler, concatAll, concatMap, map, of, tap} from '../../../utils/rxjs';
   import AnsiUp from 'ansi_up';
   import chunk from 'lodash/chunk';
   import prettyBytes from 'pretty-bytes';
@@ -137,7 +137,7 @@
 </script>
 
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../../assets/css/utilities";
 
   .logfile-view {
     padding: 1.5em;

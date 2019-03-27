@@ -90,7 +90,7 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
+  import Instance from '../../../services/instance';
   import sortBy from 'lodash/sortBy';
   import Metric from './metric';
 

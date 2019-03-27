@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {bufferTime, filter, Subject} from '@/utils/rxjs';
+import {bufferTime, filter, Subject} from './utils/rxjs';
 import groupBy from 'lodash/groupBy';
 import values from 'lodash/values';
 

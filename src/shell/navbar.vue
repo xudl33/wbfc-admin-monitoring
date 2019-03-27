@@ -55,7 +55,7 @@
 </template>
 
 <script>
-  import {compareBy} from '@/utils/collections';
+  import {compareBy} from '../utils/collections';
 
   const readCookie = (name) => {
     const match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
@@ -106,17 +106,18 @@
       this.csrfToken = readCookie('XSRF-TOKEN');
       this.csrfParameterName = (global.SBA && global.SBA.csrf && global.SBA.csrf.parameterName) || '_csrf';
     },
-    mounted() {
+    mounted(v) {
       document.documentElement.classList.add('has-navbar-fixed-top');
+      //console.log('v = %o this = %o', v, this);
     },
     beforeDestroy() {
-      document.documentElement.classList.remove('has-navbar-fixed-top')
+      //document.documentElement.classList.remove('has-navbar-fixed-top')
     }
   }
 </script>
 
-<style lang="scss">
-  @import "~@/assets/css/utilities";
+<style lang="scss" scoped>
+  @import "../assets/css/utilities";
 
   .logo {
     align-self: center;

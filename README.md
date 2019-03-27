@@ -23,6 +23,34 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 引入babel是为了支持async的transform，也就是为了支持async / await对异步的处理
 
+# 安装 (Install)
+```shell
+npm install wbfc-admin-monitoring
+```
+# 引用
+```html
+<template>
+	<div>
+		<WbfcAdminMonitoring :context-id="monitoringId"/>
+	</div>
+</template>
+<script type="text/javascript">
+import Vue from 'vue';
+import WbfcAdminMonitoring from 'wbfc-admin-monitoring/src/views/wbfc-admin-monitoring';
+export default {
+	components: {
+		WbfcAdminMonitoring
+	},
+	data(){
+		return {
+			monitoringId: 'myMonitoringId'
+		};
+	}
+}
+</script>
+```
+
+
 # 关于本项目
 本项目是一个静态SpringBoot服务健康监控项目。通过改造Spring Boot Admin UI 并增加Webpack打包的Vue项目。
 
@@ -38,7 +66,12 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 - `details`模块增加了若干模块的描述功能(用于中文显示)。
 - `metrics`模块增加了百分比`percent`模式的显示。
 
+# Tips
+虽然 [Spring Boot Admin](https://github.com/codecentric/spring-boot-admin) 在本项目中被改造成了一个Vue组件，但因为其引用了全局样式例如:bulma、generic等样式，如果在某个父组件内引用容易造成样式污染。所以这里建议重新打开一个新Tab页面来使用。
+
+
+
 ## Versions
 版本|更新时间|更新说明
 ---|---|---
-1.0.0 | 2019/03/22 | V1.0.0版本上传
+1.0.0 | 2019/03/27 | V1.0.0版本上传

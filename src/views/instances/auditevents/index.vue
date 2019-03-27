@@ -89,10 +89,10 @@
 </template>
 
 <script>
-  import subscribing from '@/mixins/subscribing';
-  import Instance from '@/services/instance';
-  import {concatMap, debounceTime, merge, Subject, tap, timer} from '@/utils/rxjs';
-  import AuditeventsList from '@/views/instances/auditevents/auditevents-list';
+  import subscribing from '../../../mixins/subscribing';
+  import Instance from '../../../services/instance';
+  import {concatMap, debounceTime, merge, Subject, tap, timer} from '../../../utils/rxjs';
+  import AuditeventsList from './auditevents-list';
   import uniqBy from 'lodash/uniqBy';
   import moment from 'moment';
 

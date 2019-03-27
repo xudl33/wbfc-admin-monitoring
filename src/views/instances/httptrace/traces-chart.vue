@@ -53,7 +53,7 @@
 
 <script>
   //see https://github.com/d3/d3/issues/2733#issuecomment-190743489
-  import d3 from '@/utils/d3';
+  import d3 from '../../../utils/d3';
   import {event as d3Event} from 'd3-selection';
   import moment from 'moment';
 
@@ -284,7 +284,7 @@
 </script>
 
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../../assets/css/utilities";
 
   .trace-chart {
     &__svg {

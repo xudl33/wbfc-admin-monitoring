@@ -215,33 +215,43 @@ export default {
 		importApplication(){
 			this.$refs.importForm.validate((valid) => {
 	          if (valid) {
-	          	this.$confirm('若名称或id相同则会覆盖数据，是否确认导入?', '提示', {
-					confirmButtonText: '确定',
-					type: 'warning',
-					cancelButtonText: '取消',
-					closeOnClickModal:false
-				}).then((r) => {
-					var appArray = JSON.parse(this.importForm.value);
-		          	for(var i in appArray){
-		          		var app = appArray[i];
-		          		if(!app.id){
-		          			app.id = Vue.$applicationContext.generateId();
-			          	}
-			          	if(!app.desc){
-			          		app.desc = '';
-			          	}
-		          	}
-		          	
-		          	Vue.$applicationContext.importApplications(appArray);
-		          	this.resetImportDialog();
-		          	this.getApplicationList();
-				}).catch(() => {
-	            });
-	          	
+	          	var appArray = JSON.parse(this.importForm.value);
+	          	// 校验是否有重复
+	          	var extArray = Vue.$applicationContext.existsApplications(appArray);
+	          	if(extArray.length > 0){
+	          		// 连接成字符串
+	          		var extNames = extArray.map(e => e.name).join(',');
+	          		this.$confirm('【'+ extNames +'】已经存在，导入会覆盖数据，是否确认?', '提示', {
+						confirmButtonText: '确定',
+						type: 'warning',
+						cancelButtonText: '取消',
+						closeOnClickModal:false
+					}).then((r) => {
+						this.doImport(appArray);
+					}).catch((e) => {
+		            });
+	          	} else {
+	          		this.doImport(appArray);
+	          	}
 	          } else {
 	            return false;
 	          }
 	        });
+		},
+		doImport(appArray){
+			for(var i in appArray){
+          		var app = appArray[i];
+          		if(!app.id){
+          			app.id = Vue.$applicationContext.generateId();
+	          	}
+	          	if(!app.desc){
+	          		app.desc = '';
+	          	}
+          	}
+          	Vue.$applicationContext.importApplications(appArray);
+          	this.resetImportDialog();
+          	this.getApplicationList();
+          	Vue.$applicationContext.getApplications();
 		},
 		closeImportDialog(done){
 			done();
@@ -257,7 +267,9 @@ export default {
 	          	var app = Object.assign({}, this.applicationForm);
 	          	app.id = Vue.$applicationContext.generateId();
 	          	Vue.$applicationContext.addApplication(app);
+	          	this.applicationList.push(app);
 	          	this.resetAddAppDialog();
+	          	Vue.$applicationContext.getApplications();
 	          } else {
 	            return false;
 	          }
@@ -278,6 +290,7 @@ export default {
 			this.resetAddAppDialog();
 			this.applicationList.splice(this.updateIndex, 1, app);
 			this.updateIndex = null;
+			Vue.$applicationContext.getApplications();
 		},
 		removeApplication(appIndex){
 			if(appIndex != null || appIndex != undefined){
@@ -289,6 +302,7 @@ export default {
 				}).then((r) => {
 					Vue.$applicationContext.deleteApplication(appIndex);
 					this.applicationList.splice(appIndex, 1);
+					Vue.$applicationContext.getApplications();
 				}).catch(() => {
 	            });
 			}

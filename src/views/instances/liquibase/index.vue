@@ -98,7 +98,7 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
+  import Instance from '../../../services/instance';
 
   export default {
     props: {

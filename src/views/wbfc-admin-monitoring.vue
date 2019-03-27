@@ -1,28 +1,33 @@
 <template>
-	<div>
-		<div id="wbfc-admin-monitoring-container"></div>
+	<div class="wbfc-admin-monitoring-html">
+		<div class="wbfc-admin-monitoring-body">
+			<div id="wbfc-admin-monitoring-container"></div>
+		</div>
 	</div>
 </template>
 <script type="text/javascript">
-import '@/assets/css/base.scss';
+
 import moment from 'moment';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import components from '@/components';
-import Notifications from '@/notifications';
-import sbaShell from '@/shell';
-import Store from '@/store';
-import ViewRegistry from '@/viewRegistry';
-import views from '@/views';
-import ApplicationContext from '@/services/applicationContext';
+import components from '../components';
+import Notifications from '../notifications';
+import sbaShell from '../shell';
+import Store from '../store';
+import ViewRegistry from '../viewRegistry';
+import views from '../views';
+import ApplicationContext from '../services/applicationContext';
+import favicon from '../assets/img/favicon.png';
+import brandImg from '../assets/img/icon-spring-boot-admin.svg';
+import faviconDanger from '../assets/img/favicon-danger.png';
 
 global.SBA = {
   uiSettings: {
-    "favicon": './static/img/favicon.png',
+    "favicon": favicon,
     "notificationFilterEnabled":false,
     "title":"Spring Boot Admin",
-    "brand":"<img src=\"./static/img/icon-spring-boot-admin.svg\"><span>${title}<\/span>",
-    "faviconDanger":"./static/img/favicon-danger.png"
+    "brand":"<img src=\"" + brandImg + "\"><span>${title}<\/span>",
+    "faviconDanger": faviconDanger
   },
   user: {"name":"admin"},
   extensions: [],
@@ -88,8 +93,9 @@ export default {
 	mounted() {
 		var _this = this;
 		global.SBA.uiSettings.brand = global.SBA.uiSettings.brand.replace('${title}', this.title);
+		
 		Vue.use(ApplicationContext, _this.getContextId);
-		new Vue({
+		var containVue = new Vue({
 		  router: new VueRouter({
 		    linkActiveClass: 'is-active',
 		    routes: viewRegistry.routes
@@ -106,11 +112,12 @@ export default {
 		      }
 		    });
 		  },
-		  provide(){
+		  /*provide(){
 		    return {
 		      getContextId: _this.getContextId,
+		      getApplications: this.getApplications
 		    };
-		  },
+		  },*/
 		  data: {
 		    views: viewRegistry.views,
 		    applications: applicationStore.applications,
@@ -146,13 +153,17 @@ export default {
 		    	if(this.userAuth){
 		    		window.sessionStorage.removeItem('user-auth');
 		    	}
-		    }
+		    },
+		    getApplications(){
+			  	this.applicationsInitialized = false;
+			  	applicationStore.start();
+			}
 		  },
 		  created() {
 		  	this.setUserAuth();
 		    applicationStore.addEventListener('connected', this.onConnected);
 		    applicationStore.addEventListener('error', this.onError);
-		    applicationStore.start();
+		    this.getApplications();
 		  },
 		  beforeDestroy() {
 		  	this.deleteUserAuth();
@@ -161,11 +172,11 @@ export default {
 		    applicationStore.removeEventListener('error', this.onError)
 		  }
 		});
-
-		Vue.use(ApplicationContext);
+		//console.log(Vue.$applicationContext)
+		Vue.$applicationContext.setContainerVue(containVue);
 	}
 }
 </script>
-<style type="text/css">
-	
+<style lang="scss">
+@import '../assets/css/base.scss';
 </style>

@@ -99,7 +99,7 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
+  import Instance from '../../../services/instance';
   import sbaLoggerControl from './logger-control';
 
   const isClassName = name => /\.[A-Z]/.test(name);

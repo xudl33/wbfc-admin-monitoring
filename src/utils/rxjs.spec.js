@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {concat, EMPTY, of, throwError} from '@/utils/rxjs';
+import {concat, EMPTY, of, throwError} from '../utils/rxjs';
 import {delay, doFirst, doOnSubscribe, listen} from './rxjs';
 
 describe('doOnSubscribe', () => {

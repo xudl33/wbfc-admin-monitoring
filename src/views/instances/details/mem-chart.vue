@@ -21,7 +21,7 @@
 </template>
 
 <script>
-  import d3 from '@/utils/d3';
+  import d3 from '../../../utils/d3';
   import moment from 'moment';
   import prettyBytes from 'pretty-bytes';
 
@@ -140,7 +140,7 @@
 </script>
 
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../../assets/css/utilities";
 
   .mem-chart {
     &__svg {

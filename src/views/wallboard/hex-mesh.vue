@@ -44,7 +44,7 @@
 </template>
 
 <script>
-  import onResize from '@/directives/on-resize';
+  import onResize from '../../directives/on-resize';
 
   const tileCount = (cols, rows) => {
     const shorterRows = Math.floor(rows / 2);
@@ -172,7 +172,7 @@
 </script>
 
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../assets/css/utilities";
 
   .hex-mesh {
     background-color: $grey-dark;

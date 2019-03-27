@@ -15,8 +15,8 @@
  */
 
 
-import axios from '@/utils/axios';
-import uri from '@/utils/uri';
+import axios from '../utils/axios';
+import uri from '../utils/uri';
 import moment from 'moment';
 
 class NotificationFilter {

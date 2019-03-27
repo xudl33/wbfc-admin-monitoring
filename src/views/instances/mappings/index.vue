@@ -57,10 +57,10 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
-  import DispatcherMappings from '@/views/instances/mappings/DispatcherMappings';
-  import ServletFilterMappings from '@/views/instances/mappings/ServletFilterMappings';
-  import ServletMappings from '@/views/instances/mappings/ServletMappings';
+  import Instance from '../../../services/instance';
+  import DispatcherMappings from '../../../views/instances/mappings/DispatcherMappings';
+  import ServletFilterMappings from '../../../views/instances/mappings/ServletFilterMappings';
+  import ServletMappings from '../../../views/instances/mappings/ServletMappings';
   import isEmpty from 'lodash/isEmpty';
 
   export default {

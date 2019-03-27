@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Application from '@/services/application';
-import {bufferTime, concat, concatMap, defer, delay, doFirst, filter, map, retryWhen, tap} from '@/utils/rxjs';
+import Application from './services/application';
+import {bufferTime, concat, concatMap, defer, delay, doFirst, filter, map, retryWhen, tap} from './utils/rxjs';
 
 export default class {
   constructor() {
@@ -99,6 +99,7 @@ export default class {
   }*/
 
   updateApplications(applications) {
+    this._applications = new Map();
     applications.forEach(a => this.updateApplication(a));
     this.applications.splice(0, this.applications.length, ...Array.from(this._applications.values()));
   }

@@ -67,10 +67,10 @@
 </template>
 
 <script>
-  import sticksBelow from '@/directives/sticks-below';
-  import Application from '@/services/application';
-  import Instance from '@/services/instance';
-  import {compareBy} from '@/utils/collections';
+  import sticksBelow from '../../../directives/sticks-below';
+  import Application from '../../../services/application';
+  import Instance from '../../../services/instance';
+  import {compareBy} from '../../../utils/collections';
 
   export default {
     props: {
@@ -156,7 +156,7 @@
 </script>
 
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../../assets/css/utilities";
 
   .sidebar {
     height: 100%;

@@ -37,7 +37,7 @@
 </template>
 
 <script>
-  import sticksBelow from '@/directives/sticks-below';
+  import sticksBelow from '../directives/sticks-below';
   import SbaIconButton from './sba-icon-button';
 
   export default {
@@ -66,7 +66,7 @@
 </script>
 
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../assets/css/utilities";
 
   .panel {
     margin-bottom: 1.5rem;

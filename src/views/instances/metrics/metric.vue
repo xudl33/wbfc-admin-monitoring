@@ -77,9 +77,9 @@
 </template>
 
 <script>
-  import subscribing from '@/mixins/subscribing';
-  import Instance from '@/services/instance';
-  import {concatMap, from, timer} from '@/utils/rxjs';
+  import subscribing from '../../../mixins/subscribing';
+  import Instance from '../../../services/instance';
+  import {concatMap, from, timer} from '../../../utils/rxjs';
   import moment from 'moment';
   import prettyBytes from 'pretty-bytes';
 

@@ -101,8 +101,8 @@
 </template>
 
 <script>
-  import sticksBelow from '@/directives/sticks-below';
-  import Instance from '@/services/instance';
+  import sticksBelow from '../../../directives/sticks-below';
+  import Instance from '../../../services/instance';
   import flatMap from 'lodash/flatMap';
   import fromPairs from 'lodash/fromPairs';
   import isEmpty from 'lodash/isEmpty';
@@ -252,7 +252,7 @@
 </script>
 
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../../assets/css/utilities";
 
   .m-bean {
     transition: all $easing $speed;

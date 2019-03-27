@@ -23,7 +23,9 @@ if (global.SBA && global.SBA.csrf && global.SBA.csrf.headerName) {
 
 export const redirectOn401 = (predicate = () => true) => error => {
   if (error.response && error.response.status === 401 && predicate(error)) {
-    window.location.assign(`login?redirectTo=${encodeURIComponent(window.location.href)}`);
+  	window.sessionStorage.removeItem("user-auth");
+  	alert('您的认证信息已过期，请重新登录');
+	window.close();
   }
   return Promise.reject(error);
 

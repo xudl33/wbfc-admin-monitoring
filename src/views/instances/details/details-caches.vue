@@ -23,9 +23,9 @@
 </template>
 
 <script>
-  import subscribing from '@/mixins/subscribing';
-  import Instance from '@/services/instance';
-  import {concatMap, timer} from '@/utils/rxjs';
+  import subscribing from '../../../mixins/subscribing';
+  import Instance from '../../../services/instance';
+  import {concatMap, timer} from '../../../utils/rxjs';
   import uniq from 'lodash/uniq';
   import detailsCache from './details-cache';
 

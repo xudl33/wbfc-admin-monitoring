@@ -103,9 +103,9 @@
 </template>
 
 <script>
-  import subscribing from '@/mixins/subscribing';
-  import Instance from '@/services/instance';
-  import {concatMap, timer} from '@/utils/rxjs';
+  import subscribing from '../../../mixins/subscribing';
+  import Instance from '../../../services/instance';
+  import {concatMap, timer} from '../../../utils/rxjs';
   import moment from 'moment';
   import sbaTracesChart from './traces-chart';
   import sbaTracesList from './traces-list';
@@ -272,7 +272,7 @@
   }
 </script>
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../../assets/css/utilities";
 
   .httptraces__limit {
     width: 5em;

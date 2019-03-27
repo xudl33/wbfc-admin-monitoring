@@ -55,7 +55,7 @@
   }
 </script>
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../assets/css/utilities";
 
   .application-summary {
     display: contents;

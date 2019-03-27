@@ -65,9 +65,9 @@
 </template>
 
 <script>
-  import subscribing from '@/mixins/subscribing';
-  import Instance from '@/services/instance';
-  import {compareBy} from '@/utils/collections';
+  import subscribing from '../../mixins/subscribing';
+  import Instance from '../../services/instance';
+  import {compareBy} from '../../utils/collections';
   import omit from 'lodash/omit';
   import moment from 'moment';
 

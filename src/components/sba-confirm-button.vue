@@ -52,7 +52,7 @@
 
 
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../assets/css/utilities";
 
   .confirm-button {
     transition: all $easing 150ms;

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import axios, {redirectOn401} from '@/utils/axios';
-import waitForPolyfill from '@/utils/eventsource-polyfill';
-import logtail from '@/utils/logtail';
-import {concat, from, ignoreElements, Observable} from '@/utils/rxjs';
-import uri from '@/utils/uri';
+import axios, {redirectOn401} from '../utils/axios';
+import waitForPolyfill from '../utils/eventsource-polyfill';
+import logtail from '../utils/logtail';
+import {concat, from, ignoreElements, Observable} from '../utils/rxjs';
+import uri from '../utils/uri';
 import transform from 'lodash/transform';
 
 const actuatorMimeTypes = [

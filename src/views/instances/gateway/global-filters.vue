@@ -78,8 +78,8 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
-  import {compareBy} from '@/utils/collections';
+  import Instance from '../../../services/instance';
+  import {compareBy} from '../../../utils/collections';
 
   const globalFilterHasKeyword = (globalFilter, keyword) => {
     return globalFilter.name.toString().toLowerCase().includes(keyword);

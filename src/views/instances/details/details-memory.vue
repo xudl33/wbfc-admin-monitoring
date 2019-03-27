@@ -66,9 +66,9 @@
 </template>
 
 <script>
-  import subscribing from '@/mixins/subscribing';
-  import Instance from '@/services/instance';
-  import {concatMap, timer} from '@/utils/rxjs';
+  import subscribing from '../../../mixins/subscribing';
+  import Instance from '../../../services/instance';
+  import {concatMap, timer} from '../../../utils/rxjs';
   import moment from 'moment';
   import prettyBytes from 'pretty-bytes';
   import memChart from './mem-chart';
@@ -147,7 +147,7 @@
 </script>
 
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../../assets/css/utilities";
 
   .memory-current {
     margin-bottom: 0 !important;

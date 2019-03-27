@@ -130,7 +130,7 @@
   }
 </script>
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../../assets/css/utilities";
 
   .beans {
     table.beans__bean-detail {

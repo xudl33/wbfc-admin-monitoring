@@ -36,8 +36,8 @@
   </div>
 </template>
 <script>
-  import Instance from '@/services/instance';
-  import {from, listen} from '@/utils/rxjs';
+  import Instance from '../../../services/instance';
+  import {from, listen} from '../../../utils/rxjs';
 
   export default {
     props: {

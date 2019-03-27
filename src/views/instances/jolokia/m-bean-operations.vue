@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
+  import Instance from '../../../services/instance';
   import {MBean} from './index';
   import mBeanOperation from './m-bean-operation';
   import mBeanOperationInvocation from './m-bean-operation-invocation';

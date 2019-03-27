@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import subscribing from '@/mixins/subscribing';
-import {timer} from '@/utils/rxjs';
+import subscribing from '../../../mixins/subscribing';
+import {timer} from '../../../utils/rxjs';
 import moment from 'moment';
 
 export default {

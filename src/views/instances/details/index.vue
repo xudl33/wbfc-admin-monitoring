@@ -86,7 +86,7 @@
 
 <script>
 
-  import Instance from '@/services/instance';
+  import Instance from '../../../services/instance';
   import detailsCaches from './details-caches';
   import detailsDatasources from './details-datasources';
   import detailsGc from './details-gc';
@@ -184,7 +184,7 @@
 
 
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../../assets/css/utilities";
 
   .details-header {
     margin-bottom: 1.5rem;

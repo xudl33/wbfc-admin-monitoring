@@ -19,8 +19,8 @@
 </template>
 
 <script>
-  import {Autolink} from '@/utils/autolink';
-  import objToString from '@/utils/objToString';
+  import {Autolink} from '../utils/autolink';
+  import objToString from '../utils/objToString';
 
   const autolink = new Autolink({truncate: {
       length: 50,

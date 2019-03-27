@@ -21,7 +21,7 @@
 </template>
 
 <script>
-  import d3 from '@/utils/d3';
+  import d3 from '../../../utils/d3';
   import moment from 'moment';
 
   export default {
@@ -115,7 +115,7 @@
 </script>
 
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../../assets/css/utilities";
 
   .threads-chart {
     &__svg {

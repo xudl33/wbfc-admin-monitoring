@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {concatMap, EMPTY, of, timer} from '@/utils/rxjs';
+import {concatMap, EMPTY, of, timer} from '../utils/rxjs';
 
 export default (getFn, interval, initialSize = 300 * 1024) => {
   let range = `bytes=-${initialSize}`;

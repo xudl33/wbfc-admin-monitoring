@@ -35,7 +35,7 @@
 </section>
 </template>
 <script type="text/javascript">
-import '@/assets/css/base.scss';
+import '../assets/css/base.scss';
 export default {
 }
 </script>

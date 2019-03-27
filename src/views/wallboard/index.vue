@@ -98,7 +98,7 @@
 </script>
 
 <style lang="scss">
-  @import "~@/assets/css/utilities";
+  @import "../../assets/css/utilities";
 
   .wallboard {
     background-color: $grey-dark;

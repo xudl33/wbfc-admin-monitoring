@@ -53,10 +53,10 @@
 </template>
 
 <script>
-  import Instance from '@/services/instance';
-  import {compareBy} from '@/utils/collections';
-  import shortenClassname from '@/utils/shortenClassname';
-  import ConditionsList from '@/views/instances/conditions/conditions-list';
+  import Instance from '../../../services/instance';
+  import {compareBy} from '../../../utils/collections';
+  import shortenClassname from '../../../utils/shortenClassname';
+  import ConditionsList from './conditions-list';
   import isEmpty from 'lodash/isEmpty';
 
   class Conditions {

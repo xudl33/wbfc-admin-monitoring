@@ -88,8 +88,8 @@
   </table>
 </template>
 <script>
-  import Instance from '@/services/instance';
-  import {concatMap, from, listen, of, tap} from '@/utils/rxjs';
+  import Instance from '../../../services/instance';
+  import {concatMap, from, listen, of, tap} from '../../../utils/rxjs';
 
 
   export default {
