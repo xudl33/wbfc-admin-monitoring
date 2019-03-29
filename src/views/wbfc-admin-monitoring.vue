@@ -74,7 +74,7 @@ export default {
 			default: null,
 			required: false
 		},
-		heartInterval: { // 心跳间隔
+		heartInterval: { // 心跳间隔 TODO
 			type: Number,
 			default: 10,
 			required: false

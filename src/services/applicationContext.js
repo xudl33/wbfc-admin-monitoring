@@ -302,7 +302,12 @@ function getHealthResult(healthUrl) {
   	}).then(r => {
   		return r.data;
   	}).catch(e => {
-  		console.log('get health with error = %o', e);
-  		return Promise.reject(e);
+  		return {};
+  		if(e.response.data){
+  			return e.response.data;
+  		} else {
+	  		console.log('get health with error = %o', e);
+  			return Promise.reject(e);
+  		}
   	});
 }
