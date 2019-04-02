@@ -18,13 +18,13 @@
 @import "~bulma/bulma";
 @import "~bulma-badge/dist/css/bulma-badge";
 
-html {
+.wbfc-admin-monitoring-html {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-body {
+.wbfc-admin-monitoring-body {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -36,36 +36,36 @@ body {
   }
 }
 
-.is-breakable {
+.wbfc-admin-monitoring-html .is-breakable {
   word-break: break-all;
 }
 
-pre.is-breakable {
+.wbfc-admin-monitoring-html pre.is-breakable {
   white-space: pre-wrap;
 }
 
-.monospaced {
+.wbfc-admin-monitoring-html .monospaced {
   font-family: $family-monospace;
 }
 
-.is-muted {
+.wbfc-admin-monitoring-html .is-muted {
   color: $grey-light;
 }
 
-.is-selectable {
+.wbfc-admin-monitoring-html .is-selectable {
   cursor: pointer;
 }
 
-.button.is-icon {
+.wbfc-admin-monitoring-html .button.is-icon {
   background: transparent;
   border-color: transparent;
 }
 
-.navbar-link::after {
+.wbfc-admin-monitoring-html .navbar-link::after {
   border-color: currentColor;
 }
 
-.navbar .badge {
+.wbfc-admin-monitoring-html .navbar .badge {
   z-index: 10;
   &[data-badge]::after {
     box-shadow: 0 0 0 $badge-border-size $navbar-background-color;
@@ -73,8 +73,8 @@ pre.is-breakable {
 }
 
 //Loading spinner
-.section.is-loading,
-.content.is-loading {
+.wbfc-admin-monitoring-html .section.is-loading,
+.wbfc-admin-monitoring-html .content.is-loading {
   &::after {
     @include loader;
     height: 5rem;
@@ -85,7 +85,7 @@ pre.is-breakable {
   }
 }
 
-p.is-loading {
+.wbfc-admin-monitoring-html p.is-loading {
   &::before {
     @include loader;
     display: inline-block;
@@ -94,12 +94,12 @@ p.is-loading {
 }
 
 //hero as card-header
-.card .hero {
+.wbfc-admin-monitoring-html .card .hero {
   padding: 0.75rem;
 }
 
 //Bullets
-.has-bullet::before {
+.wbfc-admin-monitoring-html .has-bullet::before {
   background: currentColor;
   content: '';
   width: 0.75em;
@@ -109,14 +109,14 @@ p.is-loading {
 }
 
 @each $name, $pair in $colors {
-  .has-bullet.has-bullet-#{$name}::before {
+.wbfc-admin-monitoring-html .has-bullet.has-bullet-#{$name}::before {
     $color: nth($pair, 1);
     background-color: $color;
   }
 }
 
 //D3 Charts
-.tick {
+.wbfc-admin-monitoring-html .tick {
   & line {
     stroke: currentColor;
   }
@@ -126,12 +126,12 @@ p.is-loading {
   }
 }
 
-path.domain {
+.wbfc-admin-monitoring-html path.domain {
   stroke: currentColor;
 }
 
 //for login.html
-.login {
+.wbfc-admin-monitoring-html .login {
   background-color: $black-ter;
 
   &--logo {
