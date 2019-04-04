@@ -74,15 +74,24 @@ export default {
 			default: null,
 			required: false
 		},
-		heartInterval: { // 心跳间隔 TODO
-			type: Number,
-			default: 10,
-			required: false
-		},
 		title: {
 			type: String,
 			default: 'WBFC-Admin-Monitoring',
 			required: false
+		},
+		defaultApplications:{
+			type: Array, // 默认的appcation列表
+			default: [],
+			required: false,
+			validator: function(val){
+				for(var i in val){
+					var tempApp = val[i];
+					if(!tempApp.name || !tempApp.url || !tempApp.actuatorPath){
+						return false;
+					}
+				}
+				return true;
+			}
 		}
 	},
 	methods: {
@@ -157,12 +166,18 @@ export default {
 		    getApplications(){
 			  	this.applicationsInitialized = false;
 			  	applicationStore.start();
+			},
+			addDefaultApplications(){
+			  	if(_this.defaultApplications.length > 0){
+					Vue.$applicationContext.importApplications(_this.defaultApplications);
+				}
 			}
 		  },
 		  created() {
 		  	this.setUserAuth();
 		    applicationStore.addEventListener('connected', this.onConnected);
 		    applicationStore.addEventListener('error', this.onError);
+		    this.addDefaultApplications();
 		    this.getApplications();
 		  },
 		  beforeDestroy() {
