@@ -82,6 +82,9 @@ export default {
 					var localApp = context.applications[i];
 						// id和名称相同就覆盖
 						if((applications[j].id && localApp.id === applications[j].id) || ( applications[j].name && localApp.name === applications[j].name)){
+							if(!applications[j].id){
+								applications[j].id = this.generateId();
+							}
 							overwrite = true;
 							context.applications.splice(i, 1, applications[j]);
 							break;
@@ -89,6 +92,9 @@ export default {
 					}
 					// 不覆盖的话就添加
 					if(!overwrite){
+						if(!applications[j].id){
+							applications[j].id = this.generateId();
+						}
 						context.applications.push(applications[j]);
 					}
 				}

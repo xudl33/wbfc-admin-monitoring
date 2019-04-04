@@ -50,6 +50,15 @@ export default {
 </script>
 ```
 
+# Props
+属性名|默认值|说明
+---|---|---
+title|WBFC-Admin-Monitoring:String|左上角标题文字
+context-id|wbfc-admin-monitoring-id:String|上下文ID，用于区分多个不同组件
+userAuth|userAuth:JSON|用户认证信息{"tokenType":"bearer/basic","accessToken":"JWT/base64(username:password)"}
+defaultApplications|[]:Array|默认的application信息[{"name":"名称", "url":"地址", "actuatorPath":"监控接口路径"}]
+
+
 
 # 关于本项目
 本项目是一个静态SpringBoot服务健康监控项目。通过改造Spring Boot Admin UI 并增加Webpack打包的Vue项目。
@@ -79,4 +88,5 @@ export default {
 1.0.2 | 2019/03/29 | 测试代码删除
 1.0.3 | 2019/03/29 | 修正applicationContext获取health时发生503错误的问题
 1.0.4 | 2019/04/02 | 修正导入的全局样式污染的问题(虽然改了命名空间，但由于引入了bulma，其全局样式依旧会产生污染，我没有解决这个问题)
-1.0.5 | 2019/04/04 | 增加defaultApplications属性，用于初始化时导入默认的application信息
+1.0.5 | 2019/04/04 | 增加defaultApplications属性，用于初始化时导入默认的application信息;增加README的Props说明信息
+1.0.6 | 2019/04/04 | 修正导入的application缺少instanceId的BUG
