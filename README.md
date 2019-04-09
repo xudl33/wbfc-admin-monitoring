@@ -90,3 +90,4 @@ defaultApplications|[]:Array|默认的application信息[{"name":"名称", "url":
 1.0.4 | 2019/04/02 | 修正导入的全局样式污染的问题(虽然改了命名空间，但由于引入了bulma，其全局样式依旧会产生污染，我没有解决这个问题)
 1.0.5 | 2019/04/04 | 增加defaultApplications属性，用于初始化时导入默认的application信息;增加README的Props说明信息
 1.0.6 | 2019/04/04 | 修正导入的application缺少instanceId的BUG
+1.0.7 | 2019/04/09 | 修正全局样式font-size为16px
