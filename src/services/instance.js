@@ -218,6 +218,31 @@ class Instance {
     });
   }
 
+  async fetchFeatures() {
+    return this.axios.get(uri`/features`, {
+      headers: {'Accept': actuatorMimeTypes}
+    });
+  }
+
+  async fetchDatabaseInformationSchemaTables() {
+    return this.axios.get(uri`/database/informationSchemaTables`, {
+      headers: {'Accept': actuatorMimeTypes}
+    });
+  }
+
+  async fetchDatabaseInformationSchemaColumns(tableName) {
+    return this.axios.get(uri`/database/informationSchemaColumns`, {
+      headers: {'Accept': actuatorMimeTypes},
+      params:{'tableName': tableName}
+    });
+  }
+
+  async fetchDatabaseInformationSchemaProcesslist() {
+    return this.axios.get(uri`/database/informationSchemaProcesslist`, {
+      headers: {'Accept': actuatorMimeTypes}
+    });
+  }
+
   async fetchThreaddump() {
     return this.axios.get(uri`/threaddump`, {
       headers: {'Accept': actuatorMimeTypes}

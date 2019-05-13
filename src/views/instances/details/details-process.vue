@@ -15,7 +15,7 @@
   -->
 
 <template>
-  <sba-panel title="Process" v-if="hasLoaded">
+  <sba-panel :title="'Process ' + desc" v-if="hasLoaded">
     <div>
       <div v-if="error" class="message is-danger">
         <div class="message-body">
@@ -86,6 +86,11 @@
       instance: {
         type: Instance,
         required: true
+      },
+      desc: {
+        type: String,
+        default: '',
+        required: false
       }
     },
     mixins: [subscribing],

@@ -70,15 +70,19 @@ defaultApplications|[]:Array|默认的application信息[{"name":"名称", "url":
 # 新增或修改功能
 
 - 默认的 [Spring Boot Admin](https://github.com/codecentric/spring-boot-admin) 还会包含journal功能，它会显示Application的离线和在线的时间列表，我认为这个功能有些鸡肋，而它是spring-boot-admin特有的功能，于是就把它屏蔽了。
-
-- 默认的功能还缺少`conditions`节点模块，本项目也进行了增加。
+- 默认的功能还缺少`conditions`、`features`节点模块，本项目也进行了增加。
 - `details`模块增加了若干模块的描述功能(用于中文显示)。
 - `metrics`模块增加了百分比`percent`模式的显示。
+- `auditevents`,`httptrace`,`session`模块修正了时间戳显示不正确的问题。`Spring-Boot-Admin-Server`处理时间戳，但我们直接连到服务器接口的话就会有问题了。
+- 修正httptrace每次获取数量太大，导致无法在定时器循环时间内执行完毕过滤器操作，从而导致死循环的问题
+- httptrace增加了自定义定时器时间的功能
+- 增加`database`数据库监控(mysql)功能,包括表数据统计、数据、索引、表空间统计和进程列表
+
+---更多的修改可以参考下面的更新说明
+
 
 # Tips
-虽然 [Spring Boot Admin](https://github.com/codecentric/spring-boot-admin) 在本项目中被改造成了一个Vue组件，但因为其引用了全局样式例如:bulma、generic等样式，如果在某个父组件内引用容易造成样式污染。所以这里建议重新打开一个新Tab页面来使用。
-
-
+虽然 [Spring Boot Admin](https://github.com/codecentric/spring-boot-admin) 在本项目中被改造成了一个Vue组件，但因为其引用了全局样式例如:bulma、generic等样式，如果在某个父组件内引用容易造成样式污染。所以这里建议重新打开一个新Tab页面来使用。并且需要确认是否样式被污染。如果仍然有冲突，可以通过手动增加以`.wbfc-admin-monitoring-html`或`.wbfc-admin-monitoring-body`内的样式表进行覆盖操作。
 
 ## Versions
 版本|更新时间|更新说明
@@ -91,3 +95,5 @@ defaultApplications|[]:Array|默认的application信息[{"name":"名称", "url":
 1.0.5 | 2019/04/04 | 增加defaultApplications属性，用于初始化时导入默认的application信息;增加README的Props说明信息
 1.0.6 | 2019/04/04 | 修正导入的application缺少instanceId的BUG
 1.0.7 | 2019/04/09 | 修正全局样式font-size为16px
+1.0.8 | 2019/04/12 | 修正auditevents、httptrace时间戳不正确的问题；修正httptrace每次获取数量太大，导致无法在定时器循环时间内执行完毕过滤器操作，从而导致死循环的问题；httptrace增加了自定义定时器时间的功能；修正application返回的href直连了服务器，导致绕过路由或代理服务器的问题；增加`features`模块;
+1.0.9 | 2019/05/13 | 增加`database`数据库监控(mysql)功能;修正了addSlef=true时import会覆盖掉修改过的application信息的问题；

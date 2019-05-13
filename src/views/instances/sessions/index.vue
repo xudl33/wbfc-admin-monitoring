@@ -62,6 +62,16 @@
   class Session {
     constructor({creationTime, lastAccessedTime, ...session}) {
       Object.assign(this, session);
+      var timeStr = String(creationTime);
+      if(timeStr.indexOf('.') > -1){
+        // 修正时间戳长度 js的时间戳带有毫秒，所以需要x1000
+        creationTime = creationTime * 1000;
+      }
+      timeStr = String(lastAccessedTime);
+      if(timeStr.indexOf('.') > -1){
+        // 修正时间戳长度 js的时间戳带有毫秒，所以需要x1000
+        lastAccessedTime = lastAccessedTime * 1000;
+      }
       this.creationTime = moment(creationTime);
       this.lastAccessedTime = moment(lastAccessedTime)
     }

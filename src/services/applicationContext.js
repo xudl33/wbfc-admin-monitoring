@@ -69,7 +69,7 @@ export default {
 		}
 		return [];
 	},
-	importApplications(applications){
+	importApplications(applications, isOverwrite){
 		if(this.checkStore() && Array.isArray(applications) && applications.length > 0){
 			var context = this.getContext();
 			if(!context.applications){
@@ -77,15 +77,24 @@ export default {
 				this.setContext(context);
 			} else {
 				for(var j in applications){
-					for(var i in context.applications){
 					var overwrite = false;
-					var localApp = context.applications[i];
+					for(var i in context.applications){
+						var localApp = context.applications[i];
 						// id和名称相同就覆盖
-						if((applications[j].id && localApp.id === applications[j].id) || ( applications[j].name && localApp.name === applications[j].name)){
+						if((applications[j].id && localApp.id === applications[j].id) || (applications[j].name && (localApp.name === applications[j].name)) || ( applications[j].url && (localApp.url === applications[j].url))){
 							if(!applications[j].id){
-								applications[j].id = this.generateId();
+								// 如果有本地id就用本地的
+								if(localApp.id){
+									applications[j].id = localApp.id;
+								} else {
+									applications[j].id = this.generateId();
+								}
 							}
 							overwrite = true;
+							// 如果设置了导入时不覆盖就跳过
+							if(!isOverwrite){
+								continue;
+							}
 							context.applications.splice(i, 1, applications[j]);
 							break;
 						}
@@ -93,7 +102,12 @@ export default {
 					// 不覆盖的话就添加
 					if(!overwrite){
 						if(!applications[j].id){
-							applications[j].id = this.generateId();
+							// 如果有本地id就用本地的
+							if(localApp && localApp.id){
+								applications[j].id = localApp.id;
+							} else {
+								applications[j].id = this.generateId();
+							}
 						}
 						context.applications.push(applications[j]);
 					}
@@ -263,6 +277,20 @@ async function getHealthList(callback){
 				var actResult = await getActuatorResult.call(this, app);
 				var appInfo = _this.newApplicationInfo(app);
 				if(actResult){
+					// 转成字符串
+					var actResultStr = JSON.stringify(actResult);
+					var actSelf = actResult._links.self;
+					// 替换为当前服务器(因为可能通过了nginx、zuul等代理服务器，如果这里的href不是设置的地址，则不正确)
+					if(actSelf){
+						var repHref = actSelf.href;
+						var tarHref = app.url + app.actuatorPath;
+						if(repHref !== tarHref){
+							// 替换全部的url
+							actResultStr = actResultStr.replace(new RegExp(repHref,"gm"), tarHref);
+						}
+						// 再转回JSON
+						actResult = JSON.parse(actResultStr);
+					}
 					appInfo.status = 'UP';
 					for(var j in actResult._links){
 						// templated属性要为false才是监控节点接口

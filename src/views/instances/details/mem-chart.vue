@@ -36,6 +36,7 @@
     methods: {
       drawChart(_data) {
         const vm = this;
+        //console.log('vm= %o', vm)
         const data = _data.length === 1 ? _data.concat([{..._data[0], timestamp: _data[0].timestamp + 1}]) : _data;
 
         ///setup x and y scale

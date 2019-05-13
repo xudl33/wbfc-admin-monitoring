@@ -120,7 +120,7 @@
         width: 100%;
         padding: 2.5%;
         color: $white;
-        font-size: 2em;
+        font-size: 1em;
         font-weight: $weight-semibold;
         line-height: 1.125;
       }

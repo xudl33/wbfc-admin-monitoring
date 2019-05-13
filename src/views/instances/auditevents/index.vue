@@ -99,6 +99,7 @@
   class Auditevent {
     constructor({timestamp, ...event}) {
       Object.assign(this, event);
+      //console.log('Auditevent = %o, timestamp=%o', event, timestamp);
       this.timestamp = moment(timestamp);
     }
 
@@ -161,7 +162,15 @@
       async fetchAuditevents() {
         this.isLoading = true;
         const response = await this.instance.fetchAuditevents(this.filter);
-        const converted = response.data.events.map(event => new Auditevent(event));
+        const converted = response.data.events.map(event => {
+          var timeStr = String(event.timestamp);
+          if(timeStr.indexOf('.') > -1){
+            // 修正时间戳长度 js的时间戳带有毫秒，所以需要x1000
+            event.timestamp = event.timestamp * 1000;
+          }
+          //console.log('new Audit = %o', event);
+          return new Auditevent(event);
+        });
         converted.reverse();
         this.isLoading = false;
         return converted;

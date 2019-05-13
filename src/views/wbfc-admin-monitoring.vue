@@ -81,7 +81,7 @@ export default {
 		},
 		defaultApplications:{
 			type: Array, // 默认的appcation列表
-			default: [],
+			default: () => [],
 			required: false,
 			validator: function(val){
 				for(var i in val){
@@ -169,11 +169,21 @@ export default {
 			},
 			addDefaultApplications(){
 			  	if(_this.defaultApplications.length > 0){
-					Vue.$applicationContext.importApplications(_this.defaultApplications);
+					Vue.$applicationContext.importApplications(_this.defaultApplications, false);
+				}
+			},
+			checkFavicon(){
+				var favicon = document.querySelector('link[rel*="icon"]');
+				if(!favicon){
+					var node = document.createElement('link');
+			        node.rel = "shortcut icon";
+			        node.href ="favicon.png";
+			        document.head.appendChild(node);
 				}
 			}
 		  },
 		  created() {
+		  	this.checkFavicon();
 		  	this.setUserAuth();
 		    applicationStore.addEventListener('connected', this.onConnected);
 		    applicationStore.addEventListener('error', this.onError);

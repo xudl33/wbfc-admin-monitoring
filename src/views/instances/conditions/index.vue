@@ -16,39 +16,34 @@
 
 <template>
   <section class="section" :class="{isLoading: isLoading}">
-    <div class="container">
-      <div
-        v-if="error"
-        class="message is-danger"
-      >
-        <div class="message-body">
-          <strong>
-            <font-awesome-icon
-              class="has-text-danger"
-              icon="exclamation-triangle"
-            />
-            Fetching conditions failed.
-          </strong>
-          <p v-text="error.message" />
-        </div>
+    <div v-if="error" class="message is-danger" >
+      <div class="message-body">
+        <strong>
+          <font-awesome-icon
+            class="has-text-danger"
+            icon="exclamation-triangle"
+          />
+          Fetching conditions failed.
+        </strong>
+        <p v-text="error.message" />
       </div>
-      <div class="field">
-        <p class="control is-expanded has-icons-left">
-          <input
-            class="input"
-            type="search"
-            v-model="filter"
-          >
-          <span class="icon is-small is-left">
-            <font-awesome-icon icon="filter" />
-          </span>
-        </p>
-      </div>
-      <template v-for="context in filteredContexts">
-        <h3 class="title" v-text="context.name" :key="context.name" />
-        <conditions-list :beans="context" :key="`${context.name}-beans`" />
-      </template>
     </div>
+    <div class="field">
+      <p class="control is-expanded has-icons-left">
+        <input
+          class="input"
+          type="search"
+          v-model="filter"
+        >
+        <span class="icon is-small is-left">
+          <font-awesome-icon icon="filter" />
+        </span>
+      </p>
+    </div>
+    <template v-for="context in filteredContexts">
+      <h3 class="title" v-text="context.name" :key="context.name" />
+      <conditions-list :beans="context" :key="`${context.name}-conditions`" />
+    </template>
   </section>
 </template>
 
@@ -163,7 +158,7 @@
           const res = await this.instance.fetchConditions();
           this.contexts = flattenContexts(res.data);
         } catch (error) {
-          console.warn('Fetching beans failed:', error);
+          console.warn('Fetching conditions failed:', error);
           this.error = error;
         }
         this.isLoading = false;

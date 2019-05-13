@@ -59,6 +59,16 @@
                 <input class="input httptraces__limit" min="0" type="number" placeholder="trace limit" v-model="limit">
               </p>
             </div>
+            <div class="field is-narrow has-addons">
+              <p class="control">
+                <span class="button is-static">
+                  interval
+                </span>
+              </p>
+              <p class="control">
+                <input class="input httptraces__limit" min="5000" type="number" placeholder="reflush interval" v-model="rinterval">
+              </p>
+            </div>
           </div>
         </div>
         <div class="field-body">
@@ -173,12 +183,13 @@
       error: null,
       traces: [],
       filter: null,
-      limit: 1000,
+      limit: 500,
       excludeActuator: true,
       showSuccess: true,
       showClientErrors: true,
       showServerErrors: true,
-      selection: null
+      selection: null,
+      rinterval: 5000
     }),
     computed: {
       actuatorPath() {
@@ -210,19 +221,31 @@
         if (this.traces.length > value) {
           this.traces = this.traces.slice(0, value);
         }
+      },
+      rinterval(value){
+        if(value >= 5000){
+          this.unsubscribe();
+          this.subscribe();
+        }
       }
     },
     methods: {
       async fetchHttptrace() {
         const response = await this.instance.fetchHttptrace();
-        const traces = response.data.traces.map(trace => new Trace(trace))
-          .filter(trace => trace.timestamp.isAfter(this.lastTimestamp));
+        const traces = response.data.traces.map(trace => {
+              var timeStr = String(trace.timestamp);
+              if(timeStr.indexOf('.') > -1){
+                // 修正时间戳长度 js的时间戳带有毫秒，所以需要x1000
+                trace.timestamp = trace.timestamp * 1000;
+              }
+              return new Trace(trace);
+          }).filter(trace => trace.timestamp.isAfter(this.lastTimestamp));
         traces.sort((a, b) => -1 * a.compareTo(b));
         return traces;
       },
       createSubscription() {
         const vm = this;
-        return timer(0, 5000)
+        return timer(0, this.rinterval)
           .pipe(concatMap(vm.fetchHttptrace))
           .subscribe({
             next: traces => {
@@ -239,7 +262,9 @@
       getFilterFn() {
         let filterFn = null;
         if (this.actuatorPath !== null && this.excludeActuator) {
-          filterFn = addToFilter(filterFn, (trace) => !trace.request.uri.includes(this.actuatorPath));
+          filterFn = addToFilter(filterFn, (trace) => {
+              return !trace.request.uri.includes(this.actuatorPath);
+            });
         }
         if (this.filter) {
           const normalizedFilter = this.filter.toLowerCase();

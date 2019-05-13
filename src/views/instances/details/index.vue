@@ -58,7 +58,7 @@
     </div>
     <div class="columns is-desktop">
       <div class="column is-half-desktop">
-        <details-process v-if="hasProcess" :instance="instance" />
+        <details-process v-if="hasProcess" :instance="instance" desc="(进程)"/>
         <details-gc v-if="hasGc" :instance="instance" desc="(垃圾回收)"/>
       </div>
       <div class="column is-half-desktop">

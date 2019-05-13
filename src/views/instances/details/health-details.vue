@@ -30,7 +30,8 @@
         <table class="health-details table is-fullwidth">
           <tr class="health-details__detail" v-for="detail in details" :key="detail.name">
             <td v-text="detail.name" />
-            <td v-if="name === 'diskSpace'" v-text="prettyBytes(detail.value)" />
+            <!-- 修正diskSpace时detail.value是字符串的导致无法正确转换的问题 -->
+            <td v-if="name === 'diskSpace'" v-text="prettyBytes(parseInt(detail.value))" />
             <td class="is-breakable" v-else v-text="detail.value" />
           </tr>
         </table>

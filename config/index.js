@@ -1,6 +1,7 @@
 'use strict'
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
+const DEBUG = process.env.NODE_ENV !== 'production'
 
 const path = require('path')
 
@@ -26,7 +27,7 @@ module.exports = {
      */
 
     // https://webpack.js.org/configuration/devtool/#development
-    devtool: 'cheap-module-eval-source-map',
+    devtool: DEBUG ? 'cheap-module-source-map' : 'hidden-source-map',
 
     // If you have problems debugging vue-files in devtools,
     // set this to false - it *may* help
