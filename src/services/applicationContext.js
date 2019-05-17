@@ -72,48 +72,47 @@ export default {
 	importApplications(applications, isOverwrite){
 		if(this.checkStore() && Array.isArray(applications) && applications.length > 0){
 			var context = this.getContext();
+			// 修正importApplications第一次进入时没有applications导致无法生成id的问题
 			if(!context.applications){
-				context.applications = applications;
-				this.setContext(context);
-			} else {
-				for(var j in applications){
-					var overwrite = false;
-					for(var i in context.applications){
-						var localApp = context.applications[i];
-						// id和名称相同就覆盖
-						if((applications[j].id && localApp.id === applications[j].id) || (applications[j].name && (localApp.name === applications[j].name)) || ( applications[j].url && (localApp.url === applications[j].url))){
-							if(!applications[j].id){
-								// 如果有本地id就用本地的
-								if(localApp.id){
-									applications[j].id = localApp.id;
-								} else {
-									applications[j].id = this.generateId();
-								}
-							}
-							overwrite = true;
-							// 如果设置了导入时不覆盖就跳过
-							if(!isOverwrite){
-								continue;
-							}
-							context.applications.splice(i, 1, applications[j]);
-							break;
-						}
-					}
-					// 不覆盖的话就添加
-					if(!overwrite){
+				context.applications = [];
+			}
+			for(var j in applications){
+				var overwrite = false;
+				for(var i in context.applications){
+					var localApp = context.applications[i];
+					// id和名称相同就覆盖
+					if((applications[j].id && localApp.id === applications[j].id) || (applications[j].name && (localApp.name === applications[j].name)) || ( applications[j].url && (localApp.url === applications[j].url))){
 						if(!applications[j].id){
 							// 如果有本地id就用本地的
-							if(localApp && localApp.id){
+							if(localApp.id){
 								applications[j].id = localApp.id;
 							} else {
 								applications[j].id = this.generateId();
 							}
 						}
-						context.applications.push(applications[j]);
+						overwrite = true;
+						// 如果设置了导入时不覆盖就跳过
+						if(!isOverwrite){
+							continue;
+						}
+						context.applications.splice(i, 1, applications[j]);
+						break;
 					}
 				}
-				this.setContext(context);
+				// 不覆盖的话就添加
+				if(!overwrite){
+					if(!applications[j].id){
+						// 如果有本地id就用本地的
+						if(localApp && localApp.id){
+							applications[j].id = localApp.id;
+						} else {
+							applications[j].id = this.generateId();
+						}
+					}
+					context.applications.push(applications[j]);
+				}
 			}
+			this.setContext(context);
 		}
 	},
 	updateApplication(appIndex, application){
@@ -305,6 +304,7 @@ async function getHealthList(callback){
 								appInfo.instances[0].registration.healthUrl = actResult._links[j].href;
 								var healthRes = await getHealthResult(actResult._links[j].href);
 								appInfo.instances[0].statusInfo = healthRes;
+								appInfo.status = healthRes.status;
 							}
 						}
 					}

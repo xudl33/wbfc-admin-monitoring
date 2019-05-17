@@ -243,6 +243,12 @@ class Instance {
     });
   }
 
+  async fetchLogviewer() {
+    return this.axios.get(uri`/logviewer`, {
+      headers: {'Accept': actuatorMimeTypes}
+    });
+  }
+
   async fetchThreaddump() {
     return this.axios.get(uri`/threaddump`, {
       headers: {'Accept': actuatorMimeTypes}

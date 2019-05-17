@@ -20,6 +20,8 @@ import ApplicationContext from '../services/applicationContext';
 import favicon from '../assets/img/favicon.png';
 import brandImg from '../assets/img/icon-spring-boot-admin.svg';
 import faviconDanger from '../assets/img/favicon-danger.png';
+import ElementUI from 'element-ui'
+Vue.use(ElementUI);
 
 global.SBA = {
   uiSettings: {

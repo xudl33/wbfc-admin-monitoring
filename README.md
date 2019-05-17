@@ -96,4 +96,6 @@ defaultApplications|[]:Array|默认的application信息[{"name":"名称", "url":
 1.0.6 | 2019/04/04 | 修正导入的application缺少instanceId的BUG
 1.0.7 | 2019/04/09 | 修正全局样式font-size为16px
 1.0.8 | 2019/04/12 | 修正auditevents、httptrace时间戳不正确的问题；修正httptrace每次获取数量太大，导致无法在定时器循环时间内执行完毕过滤器操作，从而导致死循环的问题；httptrace增加了自定义定时器时间的功能；修正application返回的href直连了服务器，导致绕过路由或代理服务器的问题；增加`features`模块;
-1.0.9 | 2019/05/13 | 增加`database`数据库监控(mysql)功能;修正了addSlef=true时import会覆盖掉修改过的application信息的问题；
+1.0.9 | 2019/05/10 | 增加`database`数据库监控(mysql)功能;修正了addSlef=true时import会覆盖掉修改过的application信息的问题；
+1.1.0 | 2019/05/13 | 修正importApplications第一次进入时没有applications导致无法生成id的问题
+1.1.1 | 2019/05/16 | 增加logViewer显示服务器实时日志的功能
