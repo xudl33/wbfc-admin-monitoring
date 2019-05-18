@@ -99,4 +99,4 @@ defaultApplications|[]:Array|默认的application信息[{"name":"名称", "url":
 1.0.9 | 2019/05/10 | 增加`database`数据库监控(mysql)功能;修正了addSlef=true时import会覆盖掉修改过的application信息的问题；
 1.1.0 | 2019/05/13 | 修正importApplications第一次进入时没有applications导致无法生成id的问题
 1.1.1 | 2019/05/16 | 增加logViewer显示服务器实时日志的功能
-1.1.2 | 2019/05/18 | 修正axios全局过滤器失效导致无法访问带有权限的接口问题修正；logViewer修正socket连接直连到服务器(由于socket无法穿透zuul，导致无法访问springboot的websocket服务器)；logViewer增加权限判断和异常处理、优化了debug日志的颜色；修正所有页面error message超长导致样式不正确的问题；
+1.1.2 | 2019/05/18 | 修正axios全局过滤器失效导致无法访问带有权限的接口问题修正；logViewer修正socket连接直连到服务器(由于socket无法穿透zuul，导致无法访问springboot的websocket服务器)；logViewer增加权限判断和异常处理、优化了debug日志的颜色；修正所有页面error message超长导致样式不正确的问题；element-ui版本升级为2.8.2；
