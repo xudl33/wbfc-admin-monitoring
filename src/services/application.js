@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import axios, {redirectOn401} from '../utils/axios';
+// application 不再负责加载逻辑
+/*import axios, {redirectOn401} from '../utils/axios';*/
 import waitForPolyfill from '../utils/eventsource-polyfill';
 import {concat, from, ignoreElements, Observable} from '../utils/rxjs';
 import uri from '../utils/uri';
@@ -26,13 +26,14 @@ class Application {
   constructor({name, instances, ...application}) {
     Object.assign(this, application);
     this.name = name;
-    this.axios = axios.create({
+    // application 不再负责加载逻辑
+    /*this.axios = axios.create({
       baseURL: uri`applications/${this.name}/`
     });
     this.axios.interceptors.response.use(
       response => response,
       redirectOn401()
-    );
+    );*/
     this.instances = sortBy(instances.map(i => new Instance(i), [instance => instance.registration.healthUrl]));
   }
 
@@ -51,9 +52,11 @@ class Application {
     return this.instances.findIndex(i => i.isUnregisterable) >= 0;
   }
 
-  async unregister() {
+ 
+ // applications的来源从自定义的配置获取
+/*  async unregister() {
     return this.axios.delete('')
-  }
+  }*/
 
  /* static async list() {
     return await axios.get('applications', {

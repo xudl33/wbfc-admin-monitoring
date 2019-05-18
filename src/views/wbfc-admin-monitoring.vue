@@ -206,4 +206,7 @@ export default {
 </script>
 <style lang="scss">
 @import '../assets/css/base.scss';
+.wbfc-admin-monitoring-html div.message {
+	word-break: break-all;
+}
 </style>

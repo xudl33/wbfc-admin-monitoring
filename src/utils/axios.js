@@ -27,6 +27,7 @@ export const redirectOn401 = (predicate = () => true) => error => {
   	alert('您的认证信息已过期，请重新登录');
 	window.close();
   }
+  //console.log('redirectOn401 = %o', error);
   return Promise.reject(error);
 
 };
@@ -40,12 +41,17 @@ instance.interceptors.request.use(config => {
 			alert('您的浏览器版本太低，请使用最新版的Chrome');
 	        return;
 		}
-		var userAuth = JSON.parse(window.sessionStorage.getItem("user-auth") || {});
-		var authType = '';
-		if(userAuth.tokenType && userAuth.accessToken){
-			config.headers.Authorization = userAuth.tokenType + userAuth.accessToken;
+		var token = window.sessionStorage.getItem("user-auth");
+		if(token){
+			var userAuth = JSON.parse(token);
+			var authType = '';
+			if(userAuth.tokenType && userAuth.accessToken){
+				config.headers.Authorization = userAuth.tokenType + userAuth.accessToken;
+			}
 		}
+		//console.log('%s check for userAuth = %o', config.url, token);
 	}
+	return config;
 });
 instance.interceptors.response.use(response => response, redirectOn401());
 instance.create = axios.create;

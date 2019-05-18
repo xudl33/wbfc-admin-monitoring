@@ -1,5 +1,5 @@
-import axios from '../utils/axios';
-var myAxios = axios.create();
+import myAxios from '../utils/axios';
+
 export default {
 	name: 'Application-Context',
 	install(Vue, getContextIdFunc){
@@ -282,6 +282,8 @@ async function getHealthList(callback){
 					// 替换为当前服务器(因为可能通过了nginx、zuul等代理服务器，如果这里的href不是设置的地址，则不正确)
 					if(actSelf){
 						var repHref = actSelf.href;
+						// 保存真实服务器地址 websocket需要直连
+						appInfo.realServerUrl = repHref;
 						var tarHref = app.url + app.actuatorPath;
 						if(repHref !== tarHref){
 							// 替换全部的url

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import axios, {redirectOn401} from '../utils/axios';
+import myAxios from '../utils/axios';
 import waitForPolyfill from '../utils/eventsource-polyfill';
 import logtail from '../utils/logtail';
 import {concat, from, ignoreElements, Observable} from '../utils/rxjs';
@@ -34,14 +34,10 @@ class Instance {
     Object.assign(this, instance);
     this.id = id;
     //instance.bootAdmin.url
-    var baseUrl = uri([instance.bootAdmin.url + instance.bootAdmin.actuatorPath]);
-    this.axios = axios.create({
-      baseURL: baseUrl,
-    });
-    this.axios.interceptors.response.use(
-      response => response,
-      redirectOn401(error => !isInstanceActuatorRequest(error.config.url))
-    );
+    this.baseUrl = uri([instance.bootAdmin.url + instance.bootAdmin.actuatorPath]);
+    //var baseUrl = uri([instance.bootAdmin.url + instance.bootAdmin.actuatorPath]);
+    //console.log('myAxios = %o', myAxios.default)
+    this.axios = myAxios;
   }
 
   hasEndpoint(endpointId) {
@@ -57,13 +53,13 @@ class Instance {
   }
 
   async fetchInfo() {
-    return this.axios.get(uri`/info`, {
+    return this.axios.get(this.baseUrl + `/info`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async fetchMetrics() {
-    return this.axios.get(uri`/metrics`, {
+    return this.axios.get(this.baseUrl + `/metrics`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
@@ -75,14 +71,14 @@ class Instance {
         .map(([name, value]) => `${name}:${value}`)
         .join(',')
     } : {};
-    return this.axios.get(uri`/metrics/${metric}`, {
+    return this.axios.get(this.baseUrl + `/metrics/${metric}`, {
       headers: {'Accept': actuatorMimeTypes},
       params
     });
   }
 
   async fetchHealth() {
-    var aa = uri`/health`;
+    var aa = this.baseUrl + `/health`;
     return await this.axios.get(aa, {
       headers: {'Accept': actuatorMimeTypes},
       validateStatus: null
@@ -90,173 +86,173 @@ class Instance {
   }
 
   async fetchEnv(name) {
-    return this.axios.get(uri`/env/${name || ''}`, {
+    return this.axios.get(this.baseUrl + `/env/${name || ''}`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async fetchConfigprops() {
-    return this.axios.get(uri`/configprops`, {
+    return this.axios.get(this.baseUrl + `/configprops`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async hasEnvManagerSupport() {
-    const response = await this.axios.options(uri`/env`);
+    const response = await this.axios.options(this.baseUrl + `/env`);
     return response.headers['allow'] && response.headers['allow'].includes('POST');
   }
 
   async resetEnv() {
-    return this.axios.delete(uri`/env`);
+    return this.axios.delete(this.baseUrl + `/env`);
   }
 
   async setEnv(name, value) {
-    return this.axios.post(uri`/env`, {name, value}, {
+    return this.axios.post(this.baseUrl + `/env`, {name, value}, {
       headers: {'Content-Type': 'application/json'}
     });
   }
 
   async refreshContext() {
-    return this.axios.post(uri`/refresh`);
+    return this.axios.post(this.baseUrl + `/refresh`);
   }
 
   async fetchLiquibase() {
-    return this.axios.get(uri`/liquibase`, {
+    return this.axios.get(this.baseUrl + `/liquibase`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async fetchScheduledTasks() {
-    return this.axios.get(uri`/scheduledtasks`, {
+    return this.axios.get(this.baseUrl + `/scheduledtasks`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async fetchGatewayGlobalFilters() {
-    return this.axios.get(uri`/gateway/globalfilters`, {
+    return this.axios.get(this.baseUrl + `/gateway/globalfilters`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async addGatewayRoute(route) {
-    return this.axios.post(uri`/gateway/routes/${route.id}`, route, {
+    return this.axios.post(this.baseUrl + `/gateway/routes/${route.id}`, route, {
       headers: {'Content-Type': 'application/json'}
     });
   }
 
   async fetchGatewayRoutes() {
-    return this.axios.get(uri`/gateway/routes`, {
+    return this.axios.get(this.baseUrl + `/gateway/routes`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async deleteGatewayRoute(routeId) {
-    return this.axios.delete(uri`/gateway/routes/${routeId}`, {
+    return this.axios.delete(this.baseUrl + `/gateway/routes/${routeId}`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async refreshGatewayRoutesCache() {
-    return this.axios.post(uri`/gateway/refresh`, {
+    return this.axios.post(this.baseUrl + `/gateway/refresh`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async fetchCaches() {
-    return this.axios.get(uri`/caches`, {
+    return this.axios.get(this.baseUrl + `/caches`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async clearCaches() {
-    return this.axios.delete(uri`/caches`, {
+    return this.axios.delete(this.baseUrl + `/caches`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async clearCache(name, cacheManager) {
-    return this.axios.delete(uri`/caches/${name}`, {
+    return this.axios.delete(this.baseUrl + `/caches/${name}`, {
       params: {'cacheManager': cacheManager},
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async fetchFlyway() {
-    return this.axios.get(uri`/flyway`, {
+    return this.axios.get(this.baseUrl + `/flyway`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async fetchLoggers() {
-    return this.axios.get(uri`/loggers`, {
+    return this.axios.get(this.baseUrl + `/loggers`, {
       headers: {'Accept': actuatorMimeTypes},
       transformResponse: Instance._toLoggers
     });
   }
 
   async configureLogger(name, level) {
-    return this.axios.post(uri`/loggers/${name}`, {configuredLevel: level}, {
+    return this.axios.post(this.baseUrl + `/loggers/${name}`, {configuredLevel: level}, {
       headers: {'Content-Type': 'application/json'}
     });
   }
 
   async fetchHttptrace() {
-    return this.axios.get(uri`/httptrace`, {
+    return this.axios.get(this.baseUrl + `/httptrace`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async fetchBeans() {
-    return this.axios.get(uri`/beans`, {
+    return this.axios.get(this.baseUrl + `/beans`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async fetchConditions() {
-    return this.axios.get(uri`/conditions`, {
+    return this.axios.get(this.baseUrl + `/conditions`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async fetchFeatures() {
-    return this.axios.get(uri`/features`, {
+    return this.axios.get(this.baseUrl + `/features`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async fetchDatabaseInformationSchemaTables() {
-    return this.axios.get(uri`/database/informationSchemaTables`, {
+    return this.axios.get(this.baseUrl + `/database/informationSchemaTables`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async fetchDatabaseInformationSchemaColumns(tableName) {
-    return this.axios.get(uri`/database/informationSchemaColumns`, {
+    return this.axios.get(this.baseUrl + `/database/informationSchemaColumns`, {
       headers: {'Accept': actuatorMimeTypes},
       params:{'tableName': tableName}
     });
   }
 
   async fetchDatabaseInformationSchemaProcesslist() {
-    return this.axios.get(uri`/database/informationSchemaProcesslist`, {
+    return this.axios.get(this.baseUrl + `/database/informationSchemaProcesslist`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async fetchLogviewer() {
-    return this.axios.get(uri`/logviewer`, {
+    return this.axios.get(this.baseUrl + `/logviewer`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async fetchThreaddump() {
-    return this.axios.get(uri`/threaddump`, {
+    return this.axios.get(this.baseUrl + `/threaddump`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async fetchAuditevents({after, type, principal}) {
-    return this.axios.get(uri`/auditevents`, {
+    return this.axios.get(this.baseUrl + `/auditevents`, {
       headers: {'Accept': actuatorMimeTypes},
       params: {
         after: after.toISOString(),
@@ -267,7 +263,7 @@ class Instance {
   }
 
   async fetchSessionsByUsername(username) {
-    return this.axios.get(uri`/sessions`, {
+    return this.axios.get(this.baseUrl + `/sessions`, {
       headers: {'Accept': actuatorMimeTypes},
       params: {
         username: username || undefined
@@ -276,23 +272,23 @@ class Instance {
   }
 
   async fetchSession(sessionId) {
-    return this.axios.get(uri`/sessions/${sessionId}`, {
+    return this.axios.get(this.baseUrl + `/sessions/${sessionId}`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   async deleteSession(sessionId) {
-    return this.axios.delete(uri`/sessions/${sessionId}`, {
+    return this.axios.delete(this.baseUrl + `/sessions/${sessionId}`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
   streamLogfile(interval) {
-    return logtail(opt => this.axios.get(uri`/logfile`, opt), interval);
+    return logtail(opt => this.axios.get(this.baseUrl + `/logfile`, opt), interval);
   }
 
   async listMBeans() {
-    return this.axios.get(uri`/jolokia/list`, {
+    return this.axios.get(this.baseUrl + `/jolokia/list`, {
       headers: {'Accept': 'application/json'},
       params: {canonicalNaming: false},
       transformResponse: Instance._toMBeans
@@ -305,7 +301,7 @@ class Instance {
       mbean: `${domain}:${mBean}`,
       config: {ignoreErrors: true}
     };
-    return this.axios.post(uri`/jolokia`, body, {
+    return this.axios.post(this.baseUrl + `/jolokia`, body, {
       headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     });
   }
@@ -317,7 +313,7 @@ class Instance {
       attribute,
       value
     };
-    return this.axios.post(uri`/jolokia`, body, {
+    return this.axios.post(this.baseUrl + `/jolokia`, body, {
       headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     });
   }
@@ -329,22 +325,22 @@ class Instance {
       operation,
       'arguments': args
     };
-    return this.axios.post(uri`/jolokia`, body, {
+    return this.axios.post(this.baseUrl + `/jolokia`, body, {
       headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
     });
   }
 
   async fetchMappings() {
-    return this.axios.get(uri`/mappings`, {
+    return this.axios.get(this.baseUrl + `/mappings`, {
       headers: {'Accept': actuatorMimeTypes}
     });
   }
 
-  static async fetchEvents() {
+/*  static async fetchEvents() {
     return axios.get('instances/events');
-  }
+  }*/
 
-  static getEventStream() {
+/*  static getEventStream() {
     return concat(
       from(waitForPolyfill()).pipe(ignoreElements()),
       Observable.create(observer => {
@@ -359,9 +355,9 @@ class Instance {
         };
       })
     );
-  }
+  }*/
 
-  static async get(id) {
+/*  static async get(id) {
     return axios.get(uri`instances/${id}`, {
       transformResponse(data) {
         if (!data) {
@@ -371,7 +367,7 @@ class Instance {
         return new Instance(instance);
       }
     });
-  }
+  }*/
 
   static _toLoggers(data) {
     if (!data) {
