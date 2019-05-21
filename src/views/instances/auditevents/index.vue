@@ -163,12 +163,8 @@
         this.isLoading = true;
         const response = await this.instance.fetchAuditevents(this.filter);
         const converted = response.data.events.map(event => {
-          var timeStr = String(event.timestamp);
-          if(timeStr.indexOf('.') > -1){
-            // 修正时间戳长度 js的时间戳带有毫秒，所以需要x1000
-            event.timestamp = event.timestamp * 1000;
-          }
-          //console.log('new Audit = %o', event);
+          // 因为这个接口返回的是Instant对象 所以要转成long nano=微妙
+          event.timestamp = parseInt(event.timestamp.epochSecond + '' + (event.timestamp.nano / 1000000));
           return new Auditevent(event);
         });
         converted.reverse();

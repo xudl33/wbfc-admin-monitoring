@@ -62,18 +62,10 @@
   class Session {
     constructor({creationTime, lastAccessedTime, ...session}) {
       Object.assign(this, session);
-      var timeStr = String(creationTime);
-      if(timeStr.indexOf('.') > -1){
-        // 修正时间戳长度 js的时间戳带有毫秒，所以需要x1000
-        creationTime = creationTime * 1000;
-      }
-      timeStr = String(lastAccessedTime);
-      if(timeStr.indexOf('.') > -1){
-        // 修正时间戳长度 js的时间戳带有毫秒，所以需要x1000
-        lastAccessedTime = lastAccessedTime * 1000;
-      }
-      this.creationTime = moment(creationTime);
-      this.lastAccessedTime = moment(lastAccessedTime)
+      //console.log('createTime', creationTime)
+      // 因为这个接口返回的是Instant对象 所以要转成long nano=微妙
+      this.creationTime = moment(parseInt(creationTime.epochSecond + '' + (creationTime.nano / 1000000)));
+      this.lastAccessedTime = moment(parseInt(lastAccessedTime.epochSecond + '' + (lastAccessedTime.nano / 1000000)))
     }
   }
 

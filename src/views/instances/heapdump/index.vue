@@ -16,6 +16,15 @@
 
 <template>
   <section class="section heapdump">
+    <div v-if="error" class="message is-danger">
+      <div class="message-body">
+        <strong>
+          <font-awesome-icon class="has-text-danger" icon="exclamation-triangle" />
+          Download heap dump file failed.
+        </strong>
+        <p v-text="error.message" />
+      </div>
+    </div>
     <div>
       <div class="message is-warning">
         <div class="message-body">
@@ -27,7 +36,7 @@
           Dumping the heap may be expensive in terms of cpu and disk space.
         </div>
       </div>
-      <a class="button is-primary" :href="`instances/${instance.id}/actuator/heapdump`" target="_blank">
+      <a class="button is-primary" @click="downloadHeapdump" v-loading="isLoading">
         <font-awesome-icon icon="download" />&nbsp;Download Heap Dump
       </a>
     </div>
@@ -36,12 +45,64 @@
 
 <script>
   import Instance from '../../../services/instance';
-
+  import moment from 'moment';
   export default {
+    data(){
+      return {
+        isLoading: false,
+        error: null
+      }
+    },
     props: {
       instance: {
         type: Instance,
         required: true
+      }
+    },
+    methods: {
+      async downloadHeapdump(){
+        this.isLoading = true
+        try {
+           //console.log('moment = %o', moment(moment().valueOf()).format('YYYYMMDDHHmmss'));
+            var heapdumpStream = await this.instance.downloadHeapdump();
+            var blob = new Blob([heapdumpStream.data], {type: 'application/octet-stream'});
+            var name = 'heapdump_' + moment(moment().valueOf()).format('YYYYMMDDHHmmss');
+            var downloadElement = document.createElement('a');
+            downloadElement.download = name;
+            
+            // ie必须使用msSaveOrOpenBlob
+            if('msSaveOrOpenBlob' in navigator){
+               window.navigator.msSaveOrOpenBlob(blob, name);
+            } else {
+              var agent = window.navigator.userAgent;
+              // google
+              if(agent.indexOf("Chrome")){
+                // chrome虽然也能使用FileReader，但大小有限制，经过试验发现createObjectURL才好使
+                var csvUrl = URL.createObjectURL(blob);
+                downloadElement.href = csvUrl;
+                this.triggerDownload(downloadElement);
+                window.URL.revokeObjectURL(csvUrl); //释放掉blob对象 
+              } else {
+                // 火狐和其他
+                var reader = new FileReader();
+                reader.readAsDataURL(blob);  // 转换为base64，可以直接放入a的href
+                reader.onload = function (e) {
+                  downloadElement.href = e.target.result;
+                  this.triggerDownload(downloadElement);
+                }
+              }
+            }
+        } catch(e) {
+          // statements
+          console.log(e);
+          this.error = e;
+        }
+        this.isLoading = false;
+      },
+      triggerDownload(downloadElement){
+        document.body.appendChild(downloadElement);
+    　　downloadElement.click(); //点击下载
+    　　document.body.removeChild(downloadElement); //下载完成移除元素
       }
     },
     install({viewRegistry}) {

@@ -251,6 +251,12 @@ class Instance {
     });
   }
 
+  async downloadHeapdump(){
+    return this.axios.get(this.baseUrl + `/heapdump`, {
+      responseType: 'blob'
+    });
+  }
+
   async fetchAuditevents({after, type, principal}) {
     return this.axios.get(this.baseUrl + `/auditevents`, {
       headers: {'Accept': actuatorMimeTypes},
