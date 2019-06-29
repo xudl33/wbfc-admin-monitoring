@@ -69,6 +69,24 @@ export default {
 		}
 		return [];
 	},
+	getApplication(id){
+		if(this.checkStore()){
+			var context = this.getContext();
+			var localApps = context.applications || [];
+				for(var i in localApps){
+					var localApp = localApps[i];
+					// id和名称相同就说明存在
+					if(localApp && localApp.id && localApp.id === id){
+						return {
+							"index": i,
+							"application": localApp
+						}
+					}
+				}
+			return null;
+		}
+		return null;
+	},
 	importApplications(applications, isOverwrite){
 		if(this.checkStore() && Array.isArray(applications) && applications.length > 0){
 			var context = this.getContext();

@@ -101,3 +101,4 @@ defaultApplications|[]:Array|默认的application信息[{"name":"名称", "url":
 1.1.1 | 2019/05/16 | 增加logViewer显示服务器实时日志的功能
 1.1.2 | 2019/05/18 | 修正axios全局过滤器失效导致无法访问带有权限的接口问题修正；logViewer修正socket连接直连到服务器(由于socket无法穿透zuul，导致无法访问springboot的websocket服务器)；logViewer增加权限判断和异常处理、优化了debug日志的颜色；修正所有页面error message超长导致样式不正确的问题；element-ui版本升级为2.8.2；
 1.1.3 | 2019/05/21 | 修正headdump无法通过带有权限的接口下载的BUG；修正audit log、sessions和http trace 时间戳不显示毫秒的问题；
+1.1.4 | 2019/06/29 | 增加通过instance.id获取application的接口；增加logviewer中nginx穿透的功能；

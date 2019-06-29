@@ -20,6 +20,16 @@
           </span>
         </p>
       </div>
+      <div class="field is-narrow has-addons ">
+        <p class="control">
+          <span class="button is-static">
+            Nginx穿透
+          </span>
+        </p>
+        <p class="control logviewer-is-nginx">
+          <el-switch v-model="isNginx"/>
+        </p>
+      </div>
       <div class="field is-narrow has-addons">
         <p class="control">
           <span class="button is-static">
@@ -95,6 +105,7 @@
       filter: '',
       stompClient: null,
       socketSubscriber: null,
+      isNginx: false, // nginx穿透
       toolsTips: {}, // 浮动按钮
       logLock: false, // 日志行锁定
       logLevel: '', // 日志级别
@@ -104,6 +115,13 @@
       filteredContexts() {
         const filterFn = this.addToFilter(this.getLevelFilterFn(), this.getFilterFn());
         return this.logList.filter(filterFn);
+      }
+    },
+    watch:{
+      isNginx(val, oal) {
+        this.logList = [];
+        this.disSocketConnection();
+        this.fetchLogviewerUrl();
       }
     },
     methods: {
@@ -139,17 +157,24 @@
           return false;
         };
       },
+      setContextLocalApplication(){
+        this.currentLocalApplication = Vue.$applicationContext.getApplication(this.instance.id);
+      },
       async fetchLogviewerUrl() {
         this.hasLoaded = false;
         var _this = this;
         try {
-
           const res = await this.instance.fetchLogviewer();
           if(res.data){
             // socket地址
             var tarUrl = res.data.webSocketPath;
-            // 真实服务器地址
-            var realServerUrl = this.application.realServerUrl.replace(this.instance.bootAdmin.actuatorPath, '');
+            if(this.isNginx){
+              var realServerUrl = this.instance.bootAdmin.url;
+            } else {
+              // 真实服务器地址
+              var realServerUrl = this.application.realServerUrl.replace(this.instance.bootAdmin.actuatorPath, '');
+            }
+            
             // console.log('Application = %o, instance = %o, res.data = %o', this.application, this.instance, res.data);
             // 订阅地址
             var topicUrl = res.data.topicPath;
@@ -209,6 +234,18 @@
           console.log('Fetching logviewer failed:', error);
         }
       },
+      disSocketConnection(){
+        // 取消socket订阅
+        if(this.socketSubscriber){
+          this.socketSubscriber.unsubscribe();
+          this.socketSubscriber = null;
+        }
+        // 关闭stomp连接
+        if(this.stompClient){
+          this.stompClient.disconnect();
+          this.stompClient = null;
+        }
+      }
     },
     created() {
       
@@ -217,16 +254,7 @@
       this.fetchLogviewerUrl();
     },
     beforeDestroy() {
-      // 取消socket订阅
-      if(this.socketSubscriber){
-        this.socketSubscriber.unsubscribe();
-        this.socketSubscriber = null;
-      }
-      // 关闭stomp连接
-      if(this.stompClient){
-        this.stompClient.disconnect();
-        this.stompClient = null;
-      }
+      this.disSocketConnection();
     },
     install({viewRegistry}) {
       viewRegistry.addView({
@@ -280,6 +308,19 @@
     }
     .logviewer-item{
       word-break: break-all;
+    }
+    .logviewer-is-nginx{
+      border: 1px solid transparent;
+      border-color: #dbdbdb;
+      border-radius: 4px;
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
+      padding-bottom: calc(0.375em - 1px);
+      padding-left: 0.75em;
+      padding-right: 0.75em;
+      padding-top: calc(0.375em - 1px);
+      font-size: 1rem;
+      height: 2.25em;
     }
     .el-table tbody .logviewer-table-row {
       &-TRCE .logviewer-item{
