@@ -80,17 +80,16 @@
         </el-table-column>
       </el-table> -->
       <ul class="logviewer-table">
-        <div class="logviewer-table-row" :class="['tb-ml-index-' + (index + 1)]" v-for="(fc, index) in filteredContexts" @click="toggleTableMark(index)">
-          <li class="logviewer-table-cell logviewer-table-headnum" :style="{'width': headNumMaxWidth + 'px'}">{{index + 1}}</li>
+        <div class="logviewer-table-row" :class="['tb-ml-index-' + fc.id]" v-for="(fc, index) in filteredContexts" @click="toggleTableMark(fc, (index + 1))">
+          <li class="logviewer-table-cell logviewer-table-headnum" :style="{'width': headNumMaxWidth + 'px'}">{{fc.id}}</li>
           <li class="logviewer-table-cell" :class="[fc.level?'logviewer-table-context ' + fc.level.levelStr:'']" >
-            <!-- <span class="logviewer-table-cell logviewer-table-headnum" :style="{'width': headNumMaxWidth + 'px'}">{{index + 1}}</span> -->
             <span class="logviewer-table-cell logviewer-item">{{fc.logFullMessage}}</span>
           </li>
-          <li class="logviewer-table-cell logviewer-table-markline" v-if="lineMarkIndex[index]"><i class="el-icon-warning" :title="'Mark at Line: ' + (index + 1)"></i></li>
+          <li class="logviewer-table-cell logviewer-table-markline" v-if="fc.mark"><i class="el-icon-warning" :title="fc.mark.msg"></i></li>
         </div>
       </ul>
       <div class="block logviewer-markline">
-        <el-slider v-model="marklineVal" :marks="marks" vertical height="0px" :min="0" :max="marklineMax" :format-tooltip="formatMarkline" @change="marklineChange">
+        <el-slider v-model="marklineVal" :marks="marks" vertical height="0px" :min="1" :max="logList.length" :format-tooltip="formatMarkline" @change="marklineChange">
         </el-slider>
       </div>
     </div>
@@ -148,7 +147,6 @@
       logLevel: '', // 日志级别
       logList:[], // 日志行数据
       lineMarkIndex: {}, // 标记行
-      marklineMax: 10,
       headNumMaxWidth: 0, // 行号最大宽度
       marklineVal: 0, // 标记值
       marklineHeight: 0, // 标记线高度
@@ -190,22 +188,34 @@
 
         // 更新标记线的高度
         this.$nextTick(() => {
-          this.marklineMax = val.length;
+          // 日志表格高度
           var ulTableHeight = this.$el.querySelector('.logviewer-table').offsetHeight;
-          
+          // 可见最大高度 - 230(头部导航和页面元素)
           var viewMaxHeight = document.documentElement.clientHeight - 230;
           //console.log(ulTableHeight, viewMaxHeight)
+          // 如果大于最大显示高度了 就不再增加 保证全部显示
           if(ulTableHeight > viewMaxHeight){
             ulTableHeight = viewMaxHeight;
           } else {
             ulTableHeight = ulTableHeight;
           }
+          // 设置具体元素的高度
           this.$el.querySelector('.logviewer-markline .el-slider__runway').style.height = ulTableHeight + 'px';
         });
       }
     },
     methods: {
-      toggleTableMark(index){
+      generateId() {
+        // id和全日志行号相同
+        return this.logList.length + 1;
+      },
+      findLogById(id){ // 通过id查找
+        if(id){
+          return this.logList[id - 1];
+        }
+        return null;
+      },
+      toggleTableMark(log, lineNum){
         // 行号
         /*var tpLi = document.createElement('li');
         tpLi.className = 'logviewer-table-cell logviewer-table-markline';
@@ -213,30 +223,53 @@
         tpIco.className = 'el-icon-warning';
         tpLi.append(tpIco);
         this.$el.querySelector('.tb-ml-index-' + index).append(tpLi);*/
-        var markIndex = this.formatMarkline(index);
-        if(!this.lineMarkIndex[index]){
+
+        /*var markIndex = this.lineIndexToMarkLine(lineNum);
+        console.log('lineNum = '+ lineNum + ' markIndex = ' + markIndex);
+        if(!this.lineMarkIndex[lineNum]){
           //this.lineMarkIndex[index] = true;
-          this.$set(this.lineMarkIndex, index, true);
+          this.$set(this.lineMarkIndex, lineNum, true);
           this.$set(this.marks, markIndex, '');
         } else {
-          this.$delete(this.lineMarkIndex, index);
+          this.$delete(this.lineMarkIndex, lineNum);
           this.$delete(this.marks, markIndex);
+        }*/
+        // 通过id获取日志
+        var logItem = this.findLogById(log.id);
+        if(logItem){
+          if(!logItem.mark){
+            var markIndex = this.lineIndexToMarkLine(lineNum);
+            // 设置mark
+            this.$set(logItem, 'mark', {index: markIndex, msg: 'Mark Line at: ' + log.id});
+            // 设置标记线
+            this.$set(this.marks, markIndex, '');
+          } else {
+            // 删除标记线
+            this.$delete(this.marks, logItem.mark.index);
+            // 删除mark
+            this.$delete(logItem, 'mark');
+          }
         }
+      },
+      lineIndexToMarkLine(lineNum){
+        // 行号转标记线值
+        return Math.abs(lineNum - this.logList.length - 1);
       },
       marklineChange(val){
         // 标记线改变就触发滚动
         var tp = this.formatMarkline(val);
-        // 如果是0就按第一行触发
-        if( tp == 0){
-          tp = 1;
-        }
         //console.log(tp);
         // 获取对应的日志行
         var lineElem = this.$el.querySelector('.tb-ml-index-' + tp);
-        document.body.parentElement.scrollTop = lineElem.offsetTop;
+        // 可能被过滤了 没有显示
+        if(lineElem){
+          document.body.parentElement.scrollTop = lineElem.offsetTop;  
+        }
       },
-      formatMarkline(val){
-        var tp = val - this.marklineMax;
+      formatMarkline(val){ // 下标转标记线值(标记线上下是倒置的 默认下方为0 转换后下方为最大值)
+        // -1 是为了对应行号 下标从0开始 行号从1开始
+        var tp = val - this.logList.length - 1;
+        //console.log('val = ' + val + ' tp = ' + tp);
         return Math.abs(tp) + '';
       },
       logViewerHeadnum(index){
@@ -320,7 +353,7 @@
       addLocalLog(level, fullMessage){
         if(level && fullMessage){
           var logLevel = this.getLogLevel(level);
-          this.logList.push({"level": logLevel,"logFullMessage": fullMessage});
+          this.logList.push({"id": this.generateId(), "level": logLevel,"logFullMessage": fullMessage});
         }
       },
       async fetchLogviewerUrl() {
@@ -336,11 +369,11 @@
             var tarUrl = res.data.webSocketPath;
             // 是否直连服务器
             if(this.isProxy){
-              // 真实服务器地址 通过actuator获取的基本都会是内网地址
-              var realServerUrl = this.application.realServerUrl.replace(this.instance.bootAdmin.actuatorPath, '');
-            } else {
               // 配置的通常会有nginx或spring cloud gateway  (socket协议因为无法穿透zuul，所以不能使用)
               var realServerUrl = this.instance.bootAdmin.url;
+            } else {
+              // 真实服务器地址 通过actuator获取的基本都会是内网地址
+              var realServerUrl = this.application.realServerUrl.replace(this.instance.bootAdmin.actuatorPath, '');
             }
             
             // console.log('Application = %o, instance = %o, res.data = %o', this.application, this.instance, res.data);
@@ -378,7 +411,8 @@
                 // 开启消息订阅
                 _this.socketSubscriber = _this.stompClient.subscribe(topicUrl, function (event) {
                     // 将返回的日志消息转成JSON并放入列表
-                    _this.logList.push(JSON.parse(event.body));
+                    var logJson = Object.assign({id: _this.generateId()}, JSON.parse(event.body));
+                    _this.logList.push(logJson);
                     // 不是锁定状态就滚动
                     if(!_this.logLock){
                       // 滚动到页面底部
@@ -560,7 +594,7 @@
         }
 
         &.logviewer-table-markline{
-          color: red;
+          color: #ff3860;
           width: 25px;
           text-align: center;
         }
@@ -579,7 +613,7 @@
         background-color: #409EFF;
       }
       .el-slider__stop{
-        background-color: red;
+        background-color: #ff3860;
       }
     }
 
