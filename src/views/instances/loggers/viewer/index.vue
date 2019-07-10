@@ -89,22 +89,29 @@
         </div>
       </ul>
       <div class="block logviewer-markline">
-        <el-slider v-model="marklineVal" :marks="marks" vertical height="0px" :min="1" :max="logList.length" :format-tooltip="formatMarkline" @change="marklineChange">
+        <el-slider v-model="marklineVal" :marks="marks" vertical height="0px" :min="1" :max="marklineMax" :format-tooltip="formatMarkline" @change="marklineChange">
         </el-slider>
       </div>
     </div>
     <div class="field-body toolsTips">
       <div class="field is-narrow logviewer-compact">
         <p class="control">
-          <span @click="logviewerClear">
-            <i class="button el-icon-refresh" title="清屏"></i>
+          <span @click="logviewerRetrunTop">
+            <i class="button el-icon-upload2" title="返回顶部"></i>
+          </span>
+        </p>
+      </div>
+      <div class="field is-narrow logviewer-compact">
+        <p class="control">
+          <span @click="logviewerToggleLock">
+            <i class="button" :class="{'el-icon-unlock':!logLock, 'el-icon-lock': logLock}" :title="logLock?'滚动锁定':'滚动解锁'"></i>
           </span>
         </p>
       </div>
       <div class="field is-narrow has-addons ">
         <p class="control">
-          <span @click="logviewerRetrunTop">
-            <i class="button el-icon-upload2" title="返回顶部"></i>
+          <span @click="logviewerClear">
+            <i class="button el-icon-refresh" title="清屏"></i>
           </span>
         </p>
       </div>
@@ -158,6 +165,9 @@
         var filtedList = this.logList.filter(filterFn);
         return filtedList;
       },
+      marklineMax(){
+        return this.logList.length > 0?this.logList.length:1;
+      }
     },
     watch:{
       headNumMaxWidth(val){
@@ -176,6 +186,7 @@
         this.error = null;
         this.disSocketConnection();
         this.logList = [];
+        this.marks = {};
         this.fetchLogviewerUrl();
       },
       filteredContexts(val){
@@ -201,10 +212,21 @@
           }
           // 设置具体元素的高度
           this.$el.querySelector('.logviewer-markline .el-slider__runway').style.height = ulTableHeight + 'px';
+          // 重新绘制间断点
+          this.resetlineMarkPoint();
         });
       }
     },
     methods: {
+      resetlineMarkPoint(){
+        // 重新绘制间断点
+        for(var i in this.marks){
+          var markIndex = this.lineIndexToMarkLine(this.marks[i].id);
+          var tempMark = Object.assign({}, this.marks[i]);
+          this.$delete(this.marks, i);
+          this.$set(this.marks, markIndex, tempMark);
+        }
+      },
       generateId() {
         // id和全日志行号相同
         return this.logList.length + 1;
@@ -237,15 +259,15 @@
         // 通过id获取日志
         var logItem = this.findLogById(log.id);
         if(logItem){
+          var markIndex = this.lineIndexToMarkLine(lineNum);
           if(!logItem.mark){
-            var markIndex = this.lineIndexToMarkLine(lineNum);
             // 设置mark
-            this.$set(logItem, 'mark', {index: markIndex, msg: 'Mark Line at: ' + log.id});
+            this.$set(logItem, 'mark', {msg: 'Mark Line at: ' + log.id});
             // 设置标记线
-            this.$set(this.marks, markIndex, '');
+            this.$set(this.marks, markIndex, {id: log.id});
           } else {
             // 删除标记线
-            this.$delete(this.marks, logItem.mark.index);
+            this.$delete(this.marks, markIndex);
             // 删除mark
             this.$delete(logItem, 'mark');
           }
@@ -291,6 +313,7 @@
       },
       logviewerClear(){
         this.logList = [];
+        this.marks = {};
       },
       logviewerRetrunTop(){
         document.body.parentElement.scrollTop = 0;
@@ -461,13 +484,13 @@
       testLog(){
         this.hasLoaded = true;
         var logList = this.logList;
-        for(var i = 0; i<200; i++){
+        for(var i = 0; i<20; i++){
           setTimeout((i) => {
             var lineNum = "1";
             for(var j = 0 ; j<i; j++){
               lineNum += "0";
             }
-            logList.push({"timestamp":1562234554111,"threadName":"Timer-1","loggerName":"org.apache.http.wire","level":{"levelInt":10000,"levelStr":"DEBUG"},"formattedMessage":"http-outgoing-181 >> \"Connection: Keep-Alive[\\r][\\n]\"","logFullMessage": i + "_text", "lineNum": lineNum});
+            logList.push({"id": this.generateId(),"timestamp":1562234554111,"threadName":"Timer-1","loggerName":"org.apache.http.wire","level":{"levelInt":10000,"levelStr":"DEBUG"},"formattedMessage":"http-outgoing-181 >> \"Connection: Keep-Alive[\\r][\\n]\"","logFullMessage": i + "_text", "lineNum": lineNum});
           }, i * 100, i);
           
         }
@@ -550,6 +573,7 @@
       width: 99%;
       margin-top: 15px;
       display: table;
+      min-height: 20px;
     }
     .logviewer-table-row {
       display: table-row;
