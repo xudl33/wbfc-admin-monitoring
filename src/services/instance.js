@@ -98,8 +98,13 @@ class Instance {
   }
 
   async hasEnvManagerSupport() {
-    const response = await this.axios.options(this.baseUrl + `/env`);
-    return response.headers['allow'] && response.headers['allow'].includes('POST');
+    /*const response = await this.axios.options(this.baseUrl + `/env`);
+    return response.headers['allow'] && response.headers['allow'].includes('POST');*/
+    // 修正判断有修改环境变量的功能
+    const response = await this.axios.get(this.baseUrl + `/env/management.endpoint.env.post.enabled`);
+    var res = response.data?(response.data.property?response.data.property.value:false):false;
+    //console.log('response=%o', res);
+    return res;
   }
 
   async resetEnv() {

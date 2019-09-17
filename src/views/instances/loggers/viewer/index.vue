@@ -626,8 +626,8 @@
     }
     .logviewer-markline{
       width: 1%;
-      top: 150px;
-      right: 30px;
+      top: 9.4rem;
+      right: 1.9rem;
       position: fixed;
 
       .el-slider__bar{

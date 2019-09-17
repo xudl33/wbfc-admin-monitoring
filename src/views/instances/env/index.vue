@@ -139,6 +139,8 @@
       async determineEnvManagerSupport() {
         try {
           this.hasEnvManagerSupport = await this.instance.hasEnvManagerSupport();
+          //this.hasEnvManagerSupport = true;
+          //console.log('this.hasEnvManagerSupport=%o', this.hasEnvManagerSupport);
         } catch (error) {
           console.warn('Determine env manager support failed:', error);
           this.hasEnvManagerSupport = false;
