@@ -49,19 +49,27 @@ Vue.use(VueRouter);
 Vue.use(components);
 
 const applicationStore = new Store();
-const viewRegistry = new ViewRegistry();
+Vue.$applicationStore = applicationStore;
 
-const installables = [
-  Notifications,
-  ...views,
-  ...global.SBA.extensions
-];
+// 初始化所有显示页面
+installViews();
 
-installables.forEach(view => view.install({
-  viewRegistry,
-  applicationStore,
-  vue: Vue
-}));
+function installViews(){
+	const viewRegistry  = new ViewRegistry();
+	const installables = [
+	  Notifications,
+	  ...views,
+	  ...global.SBA.extensions
+	];
+
+	installables.forEach(view => view.install({
+	  viewRegistry,
+	  applicationStore,
+	  vue: Vue
+	}));
+	Vue.$viewRegistry = viewRegistry;
+}
+
 
 export default {
 	name: 'wbfc-admin-monitoring',
@@ -109,12 +117,13 @@ export default {
 		var containVue = new Vue({
 		  router: new VueRouter({
 		    linkActiveClass: 'is-active',
-		    routes: viewRegistry.routes
+		    routes: Vue.$viewRegistry.routes
 		  }),
 		  el: '#wbfc-admin-monitoring-container',
 		  render(h) {
 		    //console.log(h);
 		    return h(sbaShell, {
+		   	  ref: 'sbaShell',
 		      props: {
 		        views: this.views,
 		        applications: this.applications,
@@ -130,13 +139,17 @@ export default {
 		    };
 		  },*/
 		  data: {
-		    views: viewRegistry.views,
+		    views: Vue.$viewRegistry.views,
 		    applications: applicationStore.applications,
 		    applicationsInitialized: false,
 		    error: null,
 		    userAuth: _this.userAuth
 		  },
 		  methods: {
+		  	/*reViews(){
+		  		this.views = Vue.$viewRegistry.views;
+		  		//console.log("set views =%o", this.views);
+		  	},*/
 		    onError(error) {
 		      //console.warn('Connection to server failed:', error);
 		      this.applicationsInitialized = true;
@@ -145,6 +158,20 @@ export default {
 		    onConnected() {
 		      this.applicationsInitialized = true;
 		      this.error = null;
+		    },
+		    onUpdate(updated){
+		    	/*installViews();
+		    	this.reViews();
+				this.$refs.sbaShell.updateNavbar(applicationStore.applications, this.views);
+		    	*/
+		    	if(Vue.$instanceShell){
+		    		//console.log("need update apps = %o", needUpdApps);
+		    		this.applications = applicationStore.applications;
+		    	}
+		    	if(Vue.$instanceSidebar){
+		    		Vue.$instanceSidebar.refresh();
+		    	}
+		    	
 		    },
 		    setUserAuth(){
 		    	if(this.userAuth){
@@ -189,6 +216,7 @@ export default {
 		  	this.setUserAuth();
 		    applicationStore.addEventListener('connected', this.onConnected);
 		    applicationStore.addEventListener('error', this.onError);
+		    applicationStore.addEventListener('applicationsUpdated', this.onUpdate);
 		    this.addDefaultApplications();
 		    this.getApplications();
 		  },
@@ -196,7 +224,8 @@ export default {
 		  	this.deleteUserAuth();
 		    applicationStore.stop();
 		    applicationStore.removeEventListener('connected', this.onConnected);
-		    applicationStore.removeEventListener('error', this.onError)
+		    applicationStore.removeEventListener('error', this.onError);
+		    applicationStore.removeEventListener('applicationsUpdated', this.onUpdate);
 		  }
 		});
 		//console.log(Vue.$applicationContext)

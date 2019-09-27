@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import Application from './services/application';
+import ApplicationContext from './services/applicationContext';
 import {bufferTime, concat, concatMap, defer, delay, doFirst, filter, map, retryWhen, tap} from './utils/rxjs';
 
 export default class {
@@ -102,6 +103,7 @@ export default class {
     this._applications = new Map();
     applications.forEach(a => this.updateApplication(a));
     this.applications.splice(0, this.applications.length, ...Array.from(this._applications.values()));
+    this._dispatchEvent('applicationsUpdated');
   }
 
   updateApplication(application) {
@@ -116,6 +118,12 @@ export default class {
       this._applications.delete(application.name);
       this._dispatchEvent('removed', oldApplication);
     }
+  }
+
+  async updateApplicationInfo(application){
+    var appInfo = await ApplicationContext.getApplicationInfo(application);
+    console.log('update app = %o', appInfo);
+    this.updateApplication(appInfo);
   }
 
   stop() {

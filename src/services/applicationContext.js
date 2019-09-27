@@ -281,7 +281,49 @@ export default {
 		if(this.containVue){
 			this.containVue.getApplications();
 		}
+	},
+	async getApplicationInfo(app){
+		var actResult = await getActuatorResult.call(this, app);
+		var appInfo = this.newApplicationInfo(app);
+		if(actResult){
+			// 转成字符串
+			var actResultStr = JSON.stringify(actResult);
+			var actSelf = actResult._links.self;
+			// 替换为当前服务器(因为可能通过了nginx、zuul等代理服务器，如果这里的href不是设置的地址，则不正确)
+			if(actSelf){
+				var repHref = actSelf.href;
+				// 保存真实服务器地址 websocket需要直连
+				appInfo.realServerUrl = repHref;
+				var tarHref = app.url + app.actuatorPath;
+				if(repHref !== tarHref){
+					// 替换全部的url
+					actResultStr = actResultStr.replace(new RegExp(repHref,"gm"), tarHref);
+				}
+				// 再转回JSON
+				actResult = JSON.parse(actResultStr);
+			}
+			appInfo.status = 'UP';
+			for(var j in actResult._links){
+				// templated属性要为false才是监控节点接口
+				if(!actResult._links[j].templated){
+					// 添加到endpoints属性
+					appInfo.instances[0].endpoints.push({
+						id: j,
+						url: actResult._links[j].href
+					});
+					// 如果有health节点就设置到statusInfo
+					if(j === 'health'){
+						appInfo.instances[0].registration.healthUrl = actResult._links[j].href;
+						var healthRes = await getHealthResult(actResult._links[j].href);
+						appInfo.instances[0].statusInfo = healthRes;
+						appInfo.status = healthRes.status;
+					}
+				}
+			}
+		}
+		return appInfo;
 	}
+
 }
 async function getHealthList(callback){
 	var _this = this;
@@ -291,51 +333,14 @@ async function getHealthList(callback){
 		if(applicationList.length > 0){
 			for(var i in applicationList){
 				var app = applicationList[i];
-				var actResult = await getActuatorResult.call(this, app);
-				var appInfo = _this.newApplicationInfo(app);
-				if(actResult){
-					// 转成字符串
-					var actResultStr = JSON.stringify(actResult);
-					var actSelf = actResult._links.self;
-					// 替换为当前服务器(因为可能通过了nginx、zuul等代理服务器，如果这里的href不是设置的地址，则不正确)
-					if(actSelf){
-						var repHref = actSelf.href;
-						// 保存真实服务器地址 websocket需要直连
-						appInfo.realServerUrl = repHref;
-						var tarHref = app.url + app.actuatorPath;
-						if(repHref !== tarHref){
-							// 替换全部的url
-							actResultStr = actResultStr.replace(new RegExp(repHref,"gm"), tarHref);
-						}
-						// 再转回JSON
-						actResult = JSON.parse(actResultStr);
-					}
-					appInfo.status = 'UP';
-					for(var j in actResult._links){
-						// templated属性要为false才是监控节点接口
-						if(!actResult._links[j].templated){
-							// 添加到endpoints属性
-							appInfo.instances[0].endpoints.push({
-								id: j,
-								url: actResult._links[j].href
-							});
-							// 如果有health节点就设置到statusInfo
-							if(j === 'health'){
-								appInfo.instances[0].registration.healthUrl = actResult._links[j].href;
-								var healthRes = await getHealthResult(actResult._links[j].href);
-								appInfo.instances[0].statusInfo = healthRes;
-								appInfo.status = healthRes.status;
-							}
-						}
-					}
-					
-				}
+				var appInfo = await _this.getApplicationInfo(app);
 				resultList.push(appInfo);
 			}
 		}
 		reslove(callback.call(this, JSON.stringify(resultList)));
 	});
 }
+
 
 function getActuatorResult(application) {
 	return myAxios({

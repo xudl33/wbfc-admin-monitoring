@@ -67,6 +67,7 @@
 </template>
 
 <script>
+  import Vue from 'vue';
   import sticksBelow from '../../../directives/sticks-below';
   import Application from '../../../services/application';
   import Instance from '../../../services/instance';
@@ -89,16 +90,23 @@
     },
     directives: {sticksBelow},
     data: () => ({
-      isStuck: false
+      isStuck: false,
+      refreshIndex: 0
     }),
     computed: {
       enabledViews() {
+        this.refreshIndex;
         if (!this.instance) {
           return [];
         }
 
         return [...this.views].filter(
-          view => typeof view.isEnabled === 'undefined' || view.isEnabled({instance: this.instance})
+          (view) => {
+            var isEnabled = view.isEnabled && view.isEnabled({instance: this.instance});
+            //console.log('view(%s) enabled=%s', view.group + "->" + view.name, isEnabled);
+            typeof view.isEnabled === 'undefined' || isEnabled
+            return isEnabled;
+          }
         ).sort(compareBy(v => v.order));
       },
       enabledGroupedViews() {
@@ -121,6 +129,13 @@
       }
     },
     methods: {
+      refresh(){
+        /*var temp = [];
+        temp = this.views.slice(0, this.views.length - 1);
+        this.views.splice(0, this.views.length);
+        this.views.push(...temp);*/
+        this.refreshIndex++;
+      },
       isActiveGroup(group) {
         return group.views.includes(this.$route.meta.view);
       },
@@ -147,6 +162,7 @@
       }
     },
     mounted() {
+      Vue.$instanceSidebar = this;
       window.addEventListener('scroll', this.onScroll);
     },
     beforeDestroy() {

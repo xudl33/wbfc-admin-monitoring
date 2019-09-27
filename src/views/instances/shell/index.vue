@@ -32,6 +32,7 @@
 </template>
 
 <script>
+  import Vue from 'vue';
   import InstanceSidebar from './sidebar';
 
   export default {
@@ -56,11 +57,18 @@
     },
     computed: {
       instance() {
-        return this.applications.findInstance(this.instanceId);
+        var ins = this.applications.findInstance(this.instanceId);
+        //console.log('active instance = %o', ins);
+        return ins;
       },
       application() {
         return this.applications.findApplicationForInstance(this.instanceId);
       }
+    },
+    methods:{
+    },
+    mounted(){
+       Vue.$instanceShell = this;
     },
     install({viewRegistry}) {
       viewRegistry.addView({

@@ -48,12 +48,17 @@
             </span>
           </div>
         </div>
+        <div class="" style="-webkit-box-flex: 0.01;-ms-flex-positive: 0.01;flex-grow: 0.01;" v-if="index != managedProperties.length - 1">
+          <div class="control">
+            <span class="icon" style="cursor: pointer;" @click="delEnv(prop.name, index)"><i class="el-icon-close"></i></span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="field is-horizontal">
-      <div class="field-body" v-if="instance.hasEndpoint('refresh')">
+      <div class="field-body" >
         <div class="field">
-          <div class="control">
+          <div class="control" v-if="instance.hasEndpoint('refresh')" style="display:inline-block;">
             <sba-confirm-button class="button is-light"
                                 :class="{'is-loading' : refreshStatus === 'executing', 'is-danger' : refreshStatus === 'failed', 'is-info' : refreshStatus === 'completed'}"
                                 :disabled="refreshStatus === 'executing'"
@@ -69,6 +74,9 @@
                 Refresh Context
               </span>
             </sba-confirm-button>
+          </div>
+          <div class="control" v-if="instance.hasRestartSupport()" style="display:inline-block;">
+            <button class="button is-danger" :class="{'is-loading' : restartStatus === 'Restarting'}" @click="restartApplication">Restart</button>
           </div>
         </div>
       </div>
@@ -116,10 +124,10 @@
 
 <script>
   import Instance from '../../../services/instance';
+  import Vue from 'vue';
   import {concatMap, filter, from, listen} from '../../../utils/rxjs';
   import debounce from 'lodash/debounce';
   import uniq from 'lodash/uniq';
-
 
   export default {
     props: {
@@ -134,6 +142,8 @@
     },
     data: () => ({
       error: null,
+      restartStatus: null,
+      restartInterval: null,
       refreshStatus: null,
       resetStatus: null,
       updateStatus: null,
@@ -152,7 +162,7 @@
           .sort());
       },
       managerPropertySource() {
-        return this.propertySources.find(ps => ps.name === 'manager') || {name: 'manager', properties: {}};
+        return this.propertySources.find(ps => ps.name === 'WbfcHotCacheEnvironment') || {name: 'WbfcHotCacheEnvironment', properties: {}};
       },
       hasManagedProperty() {
         return this.managedProperties.findIndex(property => !!property.name) >= 0;
@@ -176,6 +186,23 @@
           });
         }
       }, 250),
+      async restartApplication(){
+        const vm = this;
+        var res = await vm.instance.restartApplication();
+        if(res){
+          vm.restartStatus = res;
+          vm.restartInterval = setInterval(() =>{
+            vm.instance.fetchEnv().then((res) => {
+              vm.restartStatus = "DONE";
+              clearInterval(vm.restartInterval);
+              vm.restartInterval = null;
+               /*var app = Vue.$applicationContext.getApplication(vm.instance.id);
+               Vue.$applicationStore.updateApplicationInfo(app.application);*/
+               Vue.$applicationStore.start();
+            }).catch();
+          }, 5000);
+        }
+      },
       refreshContext() {
         const vm = this;
         from(vm.instance.refreshContext())
@@ -187,6 +214,23 @@
             },
             error: () => vm.$emit('reset')
           });
+      },
+      delEnv(name, index){
+        const vm = this;
+        from(vm.instance.delEnv(name))
+        .subscribe({
+          complete: () => {
+            vm.managedProperties.splice(index, 1);
+            vm.$emit('update');
+          },
+          error: (e) => {
+            console.log('delete Environment exceoption = %o', e);
+            vm.$alert('delete Environment exceoption!', '提示', {
+                confirmButtonText: '确定'
+            });
+            error: () => vm.$emit('update')
+          }
+        });
       },
       updateEnvironment() {
         const vm = this;

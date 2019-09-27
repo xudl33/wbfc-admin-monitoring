@@ -93,6 +93,14 @@
         return temp;
       }
     },
+    methods:{
+      refresh(){
+        var tempVies = [];
+        tempVies = this.views.slice(0, this.views.length - 1);
+        this.views.splice(0, this.views.length - 1);
+        this.views.push([...tempVies]);
+      }
+    },
     created() {
       if (global.SBA) {
         if (global.SBA.uiSettings) {

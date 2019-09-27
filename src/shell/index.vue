@@ -16,7 +16,7 @@
 
 <template>
   <div>
-    <sba-navbar :views="mainViews" :applications="applications" :error="error" :applications-initialized="applicationsInitialized" />
+    <sba-navbar ref="sbaNavbar" :views="mainViews" :applications="applications" :error="error" :applications-initialized="applicationsInitialized" />
     <router-view :views="childViews" :applications="applications" :error="error" :applications-initialized="applicationsInitialized" />
   </div>
 </template>
@@ -55,6 +55,8 @@
       childViews() {
         return this.views.filter(view => view.parent === this.activeMainViewName);
       }
+    },
+    methods: {
     }
   }
 </script>

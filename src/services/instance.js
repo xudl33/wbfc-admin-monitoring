@@ -41,6 +41,9 @@ class Instance {
   }
 
   hasEndpoint(endpointId) {
+    /*if(endpointId == 'logviewer'){
+      console.log('this.endpoints = %o', this.endpoints);
+    }*/
     return this.endpoints.findIndex(endpoint => endpoint.id === endpointId) >= 0;
   }
 
@@ -107,8 +110,27 @@ class Instance {
     return res;
   }
 
+  async hasRestartSupport() {
+    // 修正判断有重启服务的功能
+    const response = await this.axios.get(this.baseUrl + `/env/management.endpoint.restart.enabled`);
+    var res = response.data?(response.data.property?response.data.property.value:false):false;
+    //console.log('response=%o', res);
+    return res;
+  }
+
+  async restartApplication() {
+    const response = await this.axios.post(this.baseUrl + `/restart`);
+    return response.data?(response.data.message?response.data.message:"error"):"error";
+  }
+
   async resetEnv() {
     return this.axios.delete(this.baseUrl + `/env`);
+  }
+
+  async delEnv(name) {
+    return this.axios.delete(this.baseUrl + `/envDelete/${name}`, {
+      headers: {'Accept': actuatorMimeTypes}
+    });
   }
 
   async setEnv(name, value) {
