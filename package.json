@@ -1,6 +1,6 @@
 {
   "name": "wbfc-admin-monitoring",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Spring Boot Admin UI (static) - webpack",
   "author": "xudalin <xudl@wisea.com.cn>",
   "private": false,

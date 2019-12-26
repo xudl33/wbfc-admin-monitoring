@@ -46,7 +46,7 @@ instance.interceptors.request.use(config => {
 			var userAuth = JSON.parse(token);
 			var authType = '';
 			if(userAuth.tokenType && userAuth.accessToken){
-				config.headers.Authorization = userAuth.tokenType + userAuth.accessToken;
+				config.headers.Authorization = userAuth.tokenType + " " + userAuth.accessToken;
 			}
 		}
 		//console.log('%s check for userAuth = %o', config.url, token);
